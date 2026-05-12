@@ -464,32 +464,7 @@
     transition:width .1s linear;
   }
 
-  /* ===== КАСТОМНЫЙ КУРСОР ===== */
-  @media (hover:hover) and (pointer:fine){
-    body{cursor:none}
-    a,button,.faq-question,.city,input,textarea,select{cursor:none}
-    .cursor-dot, .cursor-ring{
-      position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
-      transform:translate(-50%,-50%);
-      transition:opacity .25s, background-color .25s, border-color .25s;
-    }
-    .cursor-dot{
-      width:6px;height:6px;border-radius:50%;
-      background:var(--accent);
-      transition:transform .08s linear, opacity .25s, width .3s, height .3s, background-color .25s;
-    }
-    .cursor-ring{
-      width:36px;height:36px;border-radius:50%;
-      border:1.5px solid rgba(255,217,62,.55);
-      transition:transform .22s cubic-bezier(.2,.8,.2,1), opacity .25s, width .35s cubic-bezier(.2,.8,.2,1), height .35s cubic-bezier(.2,.8,.2,1), border-color .25s, background-color .25s;
-    }
-    .cursor-ring.hover{
-      width:56px;height:56px;background:rgba(255,217,62,.12);border-color:var(--accent);
-    }
-    .cursor-ring.text{
-      width:80px;height:80px;background:rgba(255,217,62,.15);border-color:transparent;
-    }
-  }
+
 
   /* ===== АНИМИРОВАННОЕ ПОДЧЁРКИВАНИЕ ===== */
   .nav a, .foot-col a{position:relative;display:inline-block}
@@ -852,10 +827,6 @@
 
 <!-- Прогресс-бар скролла -->
 <div class="scroll-progress" id="scroll-progress"></div>
-
-<!-- Кастомный курсор -->
-<div class="cursor-ring" id="cursor-ring"></div>
-<div class="cursor-dot" id="cursor-dot"></div>
 
 <!-- ============== TOP BAR ============== -->
 <header class="topbar">
@@ -1948,41 +1919,7 @@
   window.addEventListener('scroll', updateProgress, {passive:true});
   updateProgress();
 
-  // === Кастомный курсор (только для устройств с мышью) ===
-  const isFinePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if(isFinePointer){
-    const dot = document.getElementById('cursor-dot');
-    const ring = document.getElementById('cursor-ring');
-    let mx = window.innerWidth/2, my = window.innerHeight/2;
-    let rx = mx, ry = my;
-    document.addEventListener('mousemove', (e)=>{
-      mx = e.clientX; my = e.clientY;
-      dot.style.left = mx + 'px';
-      dot.style.top  = my + 'px';
-    });
-    // плавное «догоняющее» кольцо
-    function animateRing(){
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      ring.style.left = rx + 'px';
-      ring.style.top  = ry + 'px';
-      requestAnimationFrame(animateRing);
-    }
-    animateRing();
-    // Hover-эффект — большой круг над линками и кнопками
-    document.querySelectorAll('a, button, .faq-question, .city, .client-card, .case, .service, .step, .format-card')
-      .forEach(el=>{
-        el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
-        el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
-      });
-    // Скрывать когда курсор за пределами окна
-    document.addEventListener('mouseleave', ()=>{dot.style.opacity='0';ring.style.opacity='0'});
-    document.addEventListener('mouseenter', ()=>{dot.style.opacity='1';ring.style.opacity='1'});
-  } else {
-    // На тач-устройствах прячем курсоры
-    document.getElementById('cursor-dot').style.display='none';
-    document.getElementById('cursor-ring').style.display='none';
-  }
+
 
   // === Mask-reveal заголовков ===
   // Корректный DOM-walker: бьём ТОЛЬКО текстовые узлы на слова, оставляя inline-теги нетронутыми.
