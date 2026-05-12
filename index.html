@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ORTAMEDIABOARDS — Цифровая наружная реклама</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Fallback web fonts: Unbounded — самый близкий к NEXT ART геометрический heavy с полной поддержкой казахского -->
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800;900&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* === Кастомные шрифты бренда === */
+  /* NEXT ART — оригинальные 5 начертаний (Latin + Russian).
+     Казахские буквы (Ә Қ Ң Ғ Ү Ұ Ө Һ) автоматически берутся из Unbounded — он подключён в <link> сверху и стоит сразу после NEXT ART в цепочке font-family. */
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Light.otf') format('opentype');
+    font-weight:300; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Regular.otf') format('opentype');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-SemiBold.otf') format('opentype');
+    font-weight:600; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Bold.otf') format('opentype');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Heavy.otf') format('opentype');
+    font-weight:900; font-style:normal; font-display:swap;
+  }
+
+  /* Evolenta — дополнительный (текст) */
+  @font-face{
+    font-family:'Evolenta';
+    src: local('Evolenta');
+    font-weight:300 700;
+    font-display:swap;
+  }
+
+  :root{
+    /* Основной фирменный цвет (темнее) */
+    --bg:#06122A;
+    --bg-2:#0A1A38;
+    --bg-3:#0F2348;
+    --line:#1A2C52;
+    --text:#F4F6FB;
+    --muted:#7585A4;
+    --accent:#FFD93E;        /* фирменный жёлтый */
+    --accent-2:#FFFFFF;      /* белый */
+    --accent-3:#FFE986;      /* светлый жёлтый */
+    --brand-grad: linear-gradient(135deg, #FFD93E 0%, #FFFFFF 100%);
+    --brand-grad-soft: linear-gradient(135deg, rgba(255,217,62,.85) 0%, rgba(255,255,255,.95) 100%);
+    --gradient: radial-gradient(60% 60% at 50% 0%, rgba(255,217,62,0.18) 0%, rgba(6,18,42,0) 60%);
+
+    /* Шрифты бренда */
+    --font-display: 'NEXT ART', 'Unbounded', 'Manrope', system-ui, sans-serif;
+    --font-body: 'Evolenta', 'Unbounded', 'Manrope', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  body{overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  /* font-size-adjust выравнивает x-height между NEXT ART и Unbounded fallback'ом,
+     чтобы казахские буквы не выглядели мельче или крупнее остальных */
+  h1,h2,h3,h4,h5{font-family:var(--font-display);letter-spacing:0;font-size-adjust:0.54}
+  .mono{font-family:var(--font-mono);letter-spacing:.02em}
+
+  .container{max-width:1280px;margin:0 auto;padding:0 32px;position:relative;z-index:2}
+  @media (max-width:720px){ .container{padding:0 20px} }
+
+  /* === Амбиентные градиентные блобы === */
+  .glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.55}
+  .glow-yellow{background:radial-gradient(circle, #FFD93E 0%, rgba(255,217,62,0) 70%)}
+  .glow-blue{background:radial-gradient(circle, #4DA3FF 0%, rgba(77,163,255,0) 70%)}
+  .glow-warm{background:radial-gradient(circle, #FFB23E 0%, rgba(255,178,62,0) 70%)}
+  .glow-soft{background:radial-gradient(circle, #6CFFB0 0%, rgba(108,255,176,0) 70%)}
+
+  /* анимация дрейфа блобов */
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.1)}66%{transform:translate(-20px,30px) scale(.95)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.15)}}
+  .glow.drift-1{animation:drift1 18s ease-in-out infinite}
+  .glow.drift-2{animation:drift2 22s ease-in-out infinite}
+
+  /* === Mesh-фон для секций === */
+  .mesh-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(50% 40% at 90% 0%, rgba(255,217,62,0.06), transparent 65%),
+      radial-gradient(45% 35% at 0% 60%, rgba(77,163,255,0.05), transparent 60%);
+  }
+  .mesh-bg.warm{
+    background:
+      radial-gradient(45% 50% at 10% 20%, rgba(255,178,62,0.06), transparent 65%),
+      radial-gradient(50% 40% at 100% 80%, rgba(255,217,62,0.05), transparent 60%);
+  }
+  .mesh-bg.cool{
+    background:
+      radial-gradient(50% 50% at 100% 30%, rgba(77,163,255,0.07), transparent 65%),
+      radial-gradient(40% 40% at 0% 80%, rgba(108,255,176,0.04), transparent 60%);
+  }
+
+  /* === Анимированный градиент на акцентных словах === */
+  @keyframes grad-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .grad, h1 .accent{ background-size:200% 200%; animation: grad-shift 7s ease-in-out infinite; }
+
+  /* === Градиентная обводка для интерактивных карточек === */
+  .grad-border{position:relative}
+  .grad-border::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,217,62,0.6) 0%, rgba(77,163,255,0.4) 50%, rgba(255,217,62,0.6) 100%);
+    background-size:200% 200%;
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .35s; animation: grad-shift 5s ease-in-out infinite;
+  }
+  .grad-border:hover::after{opacity:1}
+
+  /* ===== TOP BAR ===== */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter: blur(16px);
+    background: rgba(12,27,51,0.75);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{display:inline-flex;align-items:baseline;gap:8px;font-weight:600;letter-spacing:.04em;font-size:17px;font-family:var(--font-display);color:var(--text)}
+  .logo b{font-weight:600}
+  .logo .dotmark{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--brand-grad);
+    box-shadow:0 0 14px rgba(255,217,62,.6);
+    align-self:center;
+  }
+  .nav{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+  .nav a:hover{color:var(--text)}
+  .lang{display:flex;gap:2px;border:1px solid var(--line);border-radius:999px;padding:4px;background:var(--bg-2)}
+  .lang button{background:none;border:0;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.05em;font-family:var(--font-mono)}
+  .lang button.active{background:var(--text);color:var(--bg)}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--brand-grad);color:var(--bg);padding:12px 20px;border-radius:999px;font-weight:700;font-size:14px;border:0;cursor:pointer;font-family:var(--font-display);letter-spacing:.04em;transition:transform .2s,box-shadow .2s,filter .2s}
+  .cta:hover{transform:translateY(-1px);box-shadow:0 12px 36px rgba(255,217,62,.3);filter:brightness(1.05)}
+  .cta-ghost{background:transparent;color:var(--text);border:1px solid var(--line);padding:11px 20px;border-radius:999px;font-weight:600;font-size:14px;cursor:pointer;font-family:var(--font-display);letter-spacing:.04em;transition:border-color .2s,color .2s}
+  .cta-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  @media (max-width:900px){.nav,.lang{display:none}}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;padding:96px 0 120px;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:var(--gradient);pointer-events:none}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.35;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,black,transparent 80%);}
+  .hero-inner{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center}
+  @media (max-width:980px){.hero-inner{grid-template-columns:1fr;gap:48px}}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line);background:var(--bg-2);border-radius:999px;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--brand-grad);box-shadow:0 0 12px rgba(255,217,62,.7);animation:pulse 1.8s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+  h1.headline{
+    font-family:var(--font-display);
+    font-size: clamp(40px, 5.6vw, 76px);
+    line-height: 1.02;
+    letter-spacing:0.01em;
+    font-weight:800;
+    margin:24px 0 24px;
+    text-transform:none;
+  }
+  h1 .accent{
+    background:var(--brand-grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 24px rgba(255,217,62,.25));
+  }
+  /* "Ваш бренд" — без обводки, просто плотный белый с мягким бликом */
+  h1 .stroke{
+    color:#fff;
+    text-shadow:0 0 40px rgba(255,255,255,.15);
+  }
+  .section-title{font-family:var(--font-display);letter-spacing:.005em}
+  .grad{background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  .lead{font-size:18px;color:var(--muted);max-width:560px;line-height:1.6}
+  .hero-actions{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;max-width:560px}
+  .hero-stat .num{font-size:32px;font-weight:800;letter-spacing:.01em;font-family:var(--font-display)}
+  .hero-stat .num span{background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero-stat .lbl{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--font-mono)}
+
+  /* HERO — обёртка с glow-ореолом */
+  .hero-photo-wrap{position:relative}
+  .hero-photo-wrap::before{
+    content:"";position:absolute;inset:-60px;z-index:0;pointer-events:none;border-radius:48px;
+    background:
+      radial-gradient(40% 50% at 30% 30%, rgba(255,217,62,.35), transparent 70%),
+      radial-gradient(50% 40% at 80% 80%, rgba(77,163,255,.25), transparent 70%);
+    filter:blur(60px);
+  }
+
+  /* HERO — реальное фото размещения */
+  .hero-photo{
+    position:relative;
+    border-radius:24px;
+    overflow:hidden;
+    aspect-ratio: 3/4;
+    background:
+      linear-gradient(180deg, rgba(6,18,42,0) 50%, rgba(6,18,42,.45) 100%),
+      linear-gradient(135deg, #1A2F52 0%, #081428 100%);
+    box-shadow:
+      0 40px 100px -20px rgba(0,0,0,.7),
+      inset 0 0 0 1px rgba(255,255,255,.06),
+      0 0 0 1px var(--line);
+    z-index:1;
+  }
+  .hero-photo img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    z-index:0;
+  }
+  .hero-photo::before{
+    /* виньетка + тонировка под бренд */
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 50% 0%, rgba(6,18,42,0) 50%, rgba(6,18,42,.55) 100%),
+      linear-gradient(180deg, rgba(6,18,42,0) 55%, rgba(6,18,42,.85) 100%);
+  }
+  .hero-photo::after{
+    /* лёгкое зерно/glow по краям */
+    content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    box-shadow: inset 0 0 80px rgba(0,0,0,.4);
+    border-radius:inherit;
+  }
+  /* Плашки поверх фото */
+  .photo-badge{
+    position:absolute;z-index:3;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 14px;border-radius:999px;
+    background:rgba(6,18,42,.6);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.12);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--text);
+  }
+  .photo-badge.live{top:20px;left:20px}
+  .photo-badge.live::before{
+    content:"";width:8px;height:8px;border-radius:50%;
+    background:#FF3E3E;box-shadow:0 0 10px #FF3E3E;
+    animation:pulse 1.4s ease-in-out infinite;
+  }
+  .photo-badge.geo{top:20px;right:20px}
+  .photo-caption{
+    position:absolute;left:24px;right:24px;bottom:24px;z-index:3;
+    display:flex;align-items:flex-end;justify-content:space-between;gap:16px;
+  }
+  .photo-caption .who{
+    font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:.04em;color:#fff;
+  }
+  .photo-caption .where{
+    font-family:var(--font-mono);font-size:12px;color:rgba(255,255,255,.85);margin-top:8px;letter-spacing:.14em;text-transform:uppercase;
+    text-shadow:0 1px 8px rgba(0,0,0,.6);
+  }
+  .photo-caption .who{
+    text-shadow:0 2px 12px rgba(0,0,0,.6);
+  }
+  .photo-caption .stats{
+    display:flex;gap:14px;
+  }
+  .photo-caption .stats .pill{
+    padding:6px 12px;border-radius:8px;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.05em;color:#fff;
+    backdrop-filter:blur(10px);
+  }
+  .photo-caption .stats .pill b{color:var(--accent);font-weight:500}
+
+  /* SVG-сцена под реальное фото */
+  .hero-photo .scene{
+    position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block;
+  }
+  .hero-photo img{z-index:2}
+  .hero-photo img[src=""],.hero-photo img:not([src]){display:none}
+  /* Если реальное фото загрузилось — показываем поверх SVG */
+  .hero-photo.has-photo .scene{display:none}
+  @media (max-width:980px){ .hero-photo{aspect-ratio:4/5} }
+
+  .ad-1{
+    width:100%;height:100%;
+    background:
+      radial-gradient(80% 80% at 30% 30%, rgba(255,217,62,.45), transparent 60%),
+      radial-gradient(60% 60% at 80% 80%, rgba(255,255,255,.2), transparent 60%),
+      linear-gradient(135deg,#06122A,#102348);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;
+    font-family:var(--font-display);letter-spacing:.04em;
+  }
+  .ad-1 .big{
+    font-size:clamp(28px,4vw,52px);line-height:1;font-weight:800;
+    background:var(--brand-grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .ad-1 .sub{font-family:var(--font-mono);font-weight:500;font-size:11px;color:var(--accent);margin-top:12px;letter-spacing:.2em}
+  .ad-2{width:100%;height:100%;background:var(--brand-grad);display:flex;align-items:center;justify-content:center;color:var(--bg);font-family:var(--font-display);font-weight:800;font-size:28px;letter-spacing:.04em}
+  .ad-3{width:100%;height:100%;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--bg);font-family:var(--font-display);font-weight:800;font-size:18px;letter-spacing:.05em}
+
+  .scan{position:absolute;inset:0;background:linear-gradient(180deg,transparent 0%,rgba(255,217,62,.08) 50%,transparent 100%);height:30%;animation:scan 3.2s linear infinite}
+  @keyframes scan{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+
+  /* ===== TICKER ===== */
+  .ticker{
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    background:var(--bg-2);
+    overflow:hidden;
+  }
+  .ticker-track{display:flex;gap:64px;padding:18px 0;white-space:nowrap;animation:slide 40s linear infinite;font-family:var(--font-mono);font-size:13px;color:var(--muted)}
+  .ticker-track span strong{color:var(--accent);font-weight:500}
+  @keyframes slide{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+  /* ===== SECTIONS ===== */
+  section{padding:120px 0;position:relative;overflow:hidden}
+  section + section:not([style*="padding-top:0"])::before{
+    content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:280px;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,217,62,0.5) 50%, transparent);
+    z-index:1;
+  }
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:64px;flex-wrap:wrap}
+  .section-title{font-size:clamp(32px,4vw,56px);font-weight:800;letter-spacing:-0.02em;line-height:1.05;max-width:720px}
+  .section-tag{display:inline-flex;align-items:center;gap:10px;color:var(--muted);font-family:var(--font-mono);font-size:12px;text-transform:uppercase;letter-spacing:.15em;margin-bottom:20px}
+  .section-tag::before{content:"";width:24px;height:1px;background:var(--accent)}
+  .section-desc{color:var(--muted);font-size:16px;max-width:380px;line-height:1.6}
+
+  /* ===== SERVICES ===== */
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:24px;overflow:hidden}
+  @media (max-width:900px){.services-grid{grid-template-columns:1fr}}
+  .service{background:var(--bg-2);padding:40px 32px;transition:background .3s;cursor:pointer;position:relative;border-radius:0}
+  .service:hover{background:var(--bg-3)}
+  .service-num{font-family:var(--font-mono);color:var(--muted);font-size:13px;margin-bottom:32px}
+  .service-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(255,217,62,.12),rgba(255,217,62,.02));border:1px solid rgba(255,217,62,.2);display:flex;align-items:center;justify-content:center;margin-bottom:24px;color:var(--accent)}
+  .service h3{font-size:22px;font-weight:700;margin-bottom:12px}
+  .service p{color:var(--muted);font-size:15px;line-height:1.6}
+  .service-arrow{position:absolute;top:40px;right:32px;color:var(--muted);transition:color .3s,transform .3s}
+  .service:hover .service-arrow{color:var(--accent);transform:translate(4px,-4px)}
+
+  /* ===== STATS ===== */
+  .stats{
+    background:
+      radial-gradient(50% 50% at 0% 100%, rgba(77,163,255,.1), transparent 60%),
+      radial-gradient(60% 70% at 100% 0%, rgba(255,217,62,.14), transparent 60%),
+      linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    border:1px solid var(--line);border-radius:32px;padding:64px 48px;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;position:relative;overflow:hidden
+  }
+  .stats::before{content:"";position:absolute;inset:0;background:radial-gradient(40% 40% at 50% 100%,rgba(255,217,62,.06),transparent 70%);pointer-events:none}
+  .stats::after{
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,217,62,0.4), rgba(77,163,255,0.2) 50%, rgba(255,217,62,0.3));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:.6;
+  }
+  @media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr);padding:40px 28px}}
+  .stat .big{font-size:clamp(40px,5vw,64px);font-weight:800;letter-spacing:.005em;line-height:1;font-family:var(--font-display)}
+  .stat .big span{background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .lbl{font-size:14px;color:var(--muted);margin-top:12px;font-family:var(--font-mono)}
+
+  /* ===== MAP / COVERAGE ===== */
+  .coverage-wrap{position:relative;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:var(--bg-2);padding:48px;display:grid;grid-template-columns:340px 1fr;gap:48px;align-items:center}
+  @media (max-width:900px){.coverage-wrap{grid-template-columns:1fr;padding:32px}}
+  .city-list{display:flex;flex-direction:column;gap:4px}
+  .city{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:15px;font-weight:500;cursor:pointer;transition:padding .2s}
+  .city:hover{padding-left:8px}
+  .city .count{color:var(--muted);font-family:var(--font-mono);font-size:13px}
+  .city.active{color:var(--accent)}
+  .city.active .count{color:var(--accent)}
+  .map-svg{width:100%;height:auto;filter:drop-shadow(0 0 30px rgba(255,217,62,.15))}
+
+  /* ===== FORMATS ===== */
+  .formats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  @media (max-width:900px){.formats{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.formats{grid-template-columns:1fr}}
+  .format-card{position:relative;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--bg-2);aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;transition:border-color .3s, transform .3s}
+  .format-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .format-bg{position:absolute;inset:0;opacity:.6;transition:opacity .3s}
+  .format-card:hover .format-bg{opacity:.85}
+  .format-card .label{position:relative;z-index:2;font-size:13px;color:var(--muted);font-family:var(--font-mono);margin-bottom:8px}
+  .format-card .name{position:relative;z-index:2;font-size:22px;font-weight:700;letter-spacing:-0.01em}
+  .format-card .meta{position:relative;z-index:2;color:var(--muted);font-size:13px;margin-top:8px}
+  .format-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(7,8,11,.95) 100%);z-index:1}
+
+  .fb1{background:radial-gradient(80% 80% at 30% 30%,#FFD93E,#06122A)}
+  .fb2{background:radial-gradient(80% 80% at 70% 30%,#FFFFFF,#06122A)}
+  .fb3{background:radial-gradient(80% 80% at 30% 70%,#FFE986,#06122A)}
+  .fb4{background:radial-gradient(80% 80% at 70% 70%,#FFC107,#06122A)}
+
+  /* ===== HOW IT WORKS ===== */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+  @media (max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:560px){.steps{grid-template-columns:1fr}}
+  .step{padding:32px 24px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);position:relative;transition:transform .3s,border-color .3s}
+  .step:hover{transform:translateY(-3px);border-color:rgba(255,217,62,0.3)}
+  .step-num{font-family:var(--font-mono);font-size:13px;color:var(--accent)}
+  .step h4{font-size:18px;font-weight:700;margin:16px 0 8px}
+  .step p{color:var(--muted);font-size:14px;line-height:1.55}
+
+  /* ===== CASES ===== */
+  .cases{display:grid;grid-template-columns:1.4fr 1fr;gap:24px}
+  @media (max-width:900px){.cases{grid-template-columns:1fr}}
+  .case{position:relative;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);padding:36px;min-height:340px;display:flex;flex-direction:column;justify-content:flex-end;transition:transform .3s,border-color .3s}
+  .case:hover{transform:translateY(-4px);border-color:rgba(255,217,62,0.3)}
+  .case .brand{font-family:var(--font-mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.15em;margin-bottom:12px}
+  .case h4{font-size:24px;font-weight:700;letter-spacing:-0.01em}
+  .case .res{display:flex;gap:32px;margin-top:24px;padding-top:24px;border-top:1px solid var(--line)}
+  .case .res div .v{font-size:28px;font-weight:800;background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:var(--font-display)}
+  .case .res div .l{font-size:12px;color:var(--muted);font-family:var(--font-mono);margin-top:4px}
+  .case::before{content:"";position:absolute;inset:0;opacity:.3;pointer-events:none}
+  .case.c1::before{background:radial-gradient(60% 60% at 80% 20%,#FFFFFF,transparent 70%)}
+  .case.c2::before{background:radial-gradient(60% 60% at 20% 20%,#FFD93E,transparent 70%)}
+
+  /* ===== CONTACT ===== */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  @media (max-width:900px){.contact{grid-template-columns:1fr;gap:32px}}
+  .contact-form{
+    background:
+      radial-gradient(60% 50% at 100% 0%, rgba(255,217,62,.06), transparent 60%),
+      linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    border:1px solid var(--line);border-radius:24px;padding:36px;display:flex;flex-direction:column;gap:16px;position:relative;overflow:hidden;
+  }
+  .contact-form::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;
+    background:linear-gradient(135deg, rgba(255,217,62,0.45) 0%, rgba(255,255,255,0.1) 50%, rgba(77,163,255,0.25) 100%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+  }
+  .contact-form input,.contact-form textarea{
+    width:100%;background:var(--bg-3);border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--text);font-family:inherit;font-size:15px;transition:border-color .2s
+  }
+  .contact-form input:focus,.contact-form textarea:focus{outline:0;border-color:var(--accent)}
+  .contact-form textarea{min-height:120px;resize:vertical}
+  .contact-info h3{font-size:32px;font-weight:800;letter-spacing:-0.02em;margin-bottom:16px;line-height:1.1}
+  .contact-info p{color:var(--muted);margin-bottom:32px;line-height:1.6}
+  .contact-list{display:flex;flex-direction:column;gap:20px}
+  .contact-row{display:flex;gap:16px;align-items:flex-start}
+  .contact-row .ico{width:40px;height:40px;border-radius:10px;background:var(--bg-3);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--accent);flex-shrink:0}
+  .contact-row .lbl{font-size:12px;color:var(--muted);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em}
+  .contact-row .val{font-size:16px;font-weight:500;margin-top:2px}
+
+  /* ===== FOOTER ===== */
+  footer{border-top:1px solid var(--line);padding:48px 0 32px;background:var(--bg-2)}
+  .foot-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;padding-bottom:48px;border-bottom:1px solid var(--line)}
+  @media (max-width:900px){.foot-top{grid-template-columns:1fr 1fr;gap:32px}}
+  .foot-col h5{font-size:13px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:20px}
+  .foot-col a{display:block;font-size:14px;color:var(--text);padding:6px 0;opacity:.85}
+  .foot-col a:hover{color:var(--accent);opacity:1}
+  .foot-bottom{padding-top:32px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;font-family:var(--font-mono)}
+
+  /* ===== ПРОГРЕСС-БАР СКРОЛЛА (как у sencomms-подобных сайтов) ===== */
+  .scroll-progress{
+    position:fixed;top:0;left:0;height:2px;width:0%;z-index:100;
+    background:var(--brand-grad);
+    box-shadow:0 0 12px rgba(255,217,62,.5);
+    transition:width .1s linear;
+  }
+
+  /* ===== КАСТОМНЫЙ КУРСОР ===== */
+  @media (hover:hover) and (pointer:fine){
+    body{cursor:none}
+    a,button,.faq-question,.city,input,textarea,select{cursor:none}
+    .cursor-dot, .cursor-ring{
+      position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
+      transform:translate(-50%,-50%);
+      transition:opacity .25s, background-color .25s, border-color .25s;
+    }
+    .cursor-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--accent);
+      transition:transform .08s linear, opacity .25s, width .3s, height .3s, background-color .25s;
+    }
+    .cursor-ring{
+      width:36px;height:36px;border-radius:50%;
+      border:1.5px solid rgba(255,217,62,.55);
+      transition:transform .22s cubic-bezier(.2,.8,.2,1), opacity .25s, width .35s cubic-bezier(.2,.8,.2,1), height .35s cubic-bezier(.2,.8,.2,1), border-color .25s, background-color .25s;
+    }
+    .cursor-ring.hover{
+      width:56px;height:56px;background:rgba(255,217,62,.12);border-color:var(--accent);
+    }
+    .cursor-ring.text{
+      width:80px;height:80px;background:rgba(255,217,62,.15);border-color:transparent;
+    }
+  }
+
+  /* ===== АНИМИРОВАННОЕ ПОДЧЁРКИВАНИЕ ===== */
+  .nav a, .foot-col a{position:relative;display:inline-block}
+  .nav a::after, .foot-col a::after{
+    content:"";position:absolute;left:0;bottom:-3px;height:1px;width:0;
+    background:var(--accent);
+    transition:width .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .nav a:hover::after, .foot-col a:hover::after{width:100%}
+
+  /* ===== АНИМАЦИИ ПРИ СКРОЛЛЕ ===== */
+  .reveal{opacity:0;transform:translateY(50px);transition:opacity 1.1s cubic-bezier(.16,.84,.32,1), transform 1.1s cubic-bezier(.16,.84,.32,1)}
+  .reveal.in{opacity:1;transform:translateY(0)}
+
+  /* Маска снизу — текст «выезжает» из-под линии */
+  .mask-up{display:inline-block;overflow:hidden;vertical-align:bottom;line-height:1}
+  .mask-up > span{display:inline-block;transform:translateY(105%);transition:transform 1s cubic-bezier(.16,.84,.32,1)}
+  .mask-up.in > span{transform:translateY(0)}
+
+  .reveal-left{opacity:0;transform:translateX(-60px);transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal-left.in{opacity:1;transform:translateX(0)}
+  .reveal-right{opacity:0;transform:translateX(60px);transition:opacity 1s cubic-bezier(.2,.8,.2,1), transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal-right.in{opacity:1;transform:translateX(0)}
+  .reveal-scale{opacity:0;transform:scale(.92);transition:opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1)}
+  .reveal-scale.in{opacity:1;transform:scale(1)}
+
+  /* Появление по словам в заголовках — слова выезжают из-под линии-маски */
+  .split-words .word-wrap{display:inline-block;overflow:hidden;vertical-align:bottom;line-height:.95;padding:.02em 0}
+  .split-words .word{
+    display:inline-block;transform:translateY(108%);
+    transition:transform 1s cubic-bezier(.16,.84,.32,1);
+    will-change:transform;
+  }
+  .split-words.in .word{transform:translateY(0)}
+  /* gradient-эффект сохраняется при разбиении на слова */
+  .grad .word, h1 .accent .word{
+    background:var(--brand-grad);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  /* Появление карточек по очереди */
+  .stagger > *{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1)}
+  .stagger.in > *{opacity:1;transform:translateY(0)}
+  .stagger.in > *:nth-child(1){transition-delay:.05s}
+  .stagger.in > *:nth-child(2){transition-delay:.15s}
+  .stagger.in > *:nth-child(3){transition-delay:.25s}
+  .stagger.in > *:nth-child(4){transition-delay:.35s}
+  .stagger.in > *:nth-child(5){transition-delay:.45s}
+  .stagger.in > *:nth-child(6){transition-delay:.55s}
+  .stagger.in > *:nth-child(7){transition-delay:.65s}
+  .stagger.in > *:nth-child(8){transition-delay:.75s}
+
+  /* Magnetic-кнопка (плавное смещение под курсор) */
+  .magnetic{display:inline-block;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+
+  /* ===== БЛОК "НАШИ КЛИЕНТЫ" — бесконечная лента ===== */
+  .clients{padding:80px 0 100px;position:relative;overflow:hidden}
+  .clients-head{
+    text-align:center;margin-bottom:48px;
+  }
+  .clients-head .section-tag{justify-content:center}
+  .clients-marquee{
+    position:relative;width:100%;overflow:hidden;
+    mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image:linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .clients-track{
+    display:flex;gap:48px;align-items:center;width:max-content;
+    animation: client-scroll 38s linear infinite;
+  }
+  .clients-marquee:hover .clients-track{animation-play-state:paused}
+  @keyframes client-scroll{
+    0%{transform:translateX(0)}
+    100%{transform:translateX(-50%)}
+  }
+  .client-card{
+    flex:0 0 auto;height:120px;min-width:240px;padding:0 36px;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid var(--line);border-radius:20px;
+    background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    color:#fff;transition:transform .3s,border-color .3s,background .3s;
+    position:relative;overflow:hidden;
+  }
+  .client-card::before{
+    content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:radial-gradient(60% 80% at 50% 0%, rgba(255,217,62,0.12), transparent 60%);
+    opacity:0;transition:opacity .3s;
+  }
+  .client-card:hover{transform:translateY(-4px);border-color:rgba(255,217,62,0.4)}
+  .client-card:hover::before{opacity:1}
+  .client-card .logo-text{
+    font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:.06em;white-space:nowrap;
+    position:relative;z-index:1;
+  }
+  /* картинка логотипа поверх стилизованной карточки */
+  .client-card img.logo-img{
+    max-height:60%;max-width:80%;object-fit:contain;
+    position:relative;z-index:1;
+  }
+  /* inline SVG логотипы — занимают всю карточку, контент внутри SVG масштабируется */
+  .client-card .logo-svg{
+    width:100%;height:100%;display:block;position:relative;z-index:1;
+  }
+  /* если есть SVG — фон карточки делаем белым (т.к. внутри SVG свой фон) */
+  .client-card.svg-logo{background:#fff !important;padding:0}
+  .client-card.svg-logo:hover{transform:translateY(-4px)}
+
+  /* стили для конкретных брендов — фон и текст под характер реального логотипа */
+
+  .lc-qadam{background:#FFFFFF}
+  .lc-qadam .logo-text{color:#1A1A1A;font-weight:800;letter-spacing:.12em;font-size:19px;border:2px solid #E5C56C;padding:10px 16px}
+  .lc-qadam .logo-text b{display:block;font-size:11px;font-weight:500;color:#7A7A7A;letter-spacing:.32em;margin-top:2px}
+
+  .lc-dami{background:#A622D2}
+  .lc-dami .logo-text{color:#fff;font-weight:800;font-size:22px;letter-spacing:.04em;text-align:center}
+  .lc-dami .logo-text b{display:block;font-size:11px;font-weight:500;letter-spacing:.04em;margin-top:2px;text-transform:lowercase}
+
+  .lc-sapadent{background:linear-gradient(135deg,#1F8E96 0%, #145D63 100%)}
+  .lc-sapadent .logo-text{color:#fff;font-weight:600;letter-spacing:.18em;font-family:Georgia,serif;font-size:19px}
+
+  .lc-dastur{background:#F6EFDF}
+  .lc-dastur .logo-text{color:#1A1A1A;font-weight:800;letter-spacing:.12em;font-size:20px;text-align:center}
+  .lc-dastur .logo-text b{display:block;font-size:9px;font-weight:500;letter-spacing:.4em;color:#8B6A3A;margin-top:4px}
+
+  .lc-kvadro{background:#F4ECDC}
+  .lc-kvadro .logo-text{color:#C81E1E;font-weight:900;letter-spacing:.06em;font-size:19px;font-style:italic}
+
+  .lc-dynex{background:#0A6FD0}
+  .lc-dynex .logo-text{color:#fff;font-weight:900;letter-spacing:.04em;font-size:22px}
+  .lc-dynex .logo-text b{font-weight:500;opacity:.85}
+
+  .lc-emporio{background:radial-gradient(60% 70% at 50% 50%, #3A1F0A 0%, #0F0904 100%)}
+  .lc-emporio .logo-text{color:#E8C56C;font-family:Georgia,serif;font-style:italic;font-weight:600;font-size:22px;text-shadow:0 0 18px rgba(232,197,108,.55)}
+  .lc-emporio .logo-text b{display:block;font-size:11px;font-style:italic;font-weight:400;letter-spacing:.1em;margin-top:2px}
+
+  .lc-aiala{background:#0E2540}
+  .lc-aiala .logo-text{color:#FF7A1A;font-weight:800;letter-spacing:.14em;font-size:17px}
+
+  .lc-waqf{background:radial-gradient(circle, #FFC93C 0%, #FFC93C 55%, #1F8C4A 56%, #1F8C4A 100%)}
+  .lc-waqf .logo-text{color:#fff;font-weight:900;letter-spacing:.08em;font-size:24px;text-shadow:0 0 8px rgba(0,0,0,.3)}
+
+  .lc-filtrdom{background:#0E5BAB}
+  .lc-filtrdom .logo-text{color:#fff;font-weight:700;font-size:24px;letter-spacing:.01em;font-style:normal}
+  .lc-filtrdom .logo-text b{font-weight:700;color:#9DC8E8}
+
+  .lc-english{background:#FFFFFF}
+  .lc-english .logo-text{color:#0E2954;font-weight:900;letter-spacing:.06em;font-size:22px;text-align:center}
+  .lc-english .logo-text b{display:block;color:#D8232A;font-size:10px;letter-spacing:.18em;margin-top:2px;font-weight:600}
+
+  .lc-bokentau{background:#FFFFFF}
+  .lc-bokentau .logo-text{color:#0E5BAB;font-weight:900;letter-spacing:.04em;font-size:18px;text-align:center}
+  .lc-bokentau .logo-text b{display:block;font-size:9px;font-weight:500;letter-spacing:.4em;color:#0E5BAB;margin-top:3px;opacity:.75}
+
+  .lc-tlp{background:#0E5236}
+  .lc-tlp .logo-text{color:#fff;font-family:Georgia,serif;font-weight:600;font-size:22px;letter-spacing:.18em;text-align:center;font-style:italic}
+  .lc-tlp .logo-text b{display:block;font-style:normal;font-size:9px;font-weight:500;letter-spacing:.32em;margin-top:4px;opacity:.85}
+
+  .lc-thestom{background:linear-gradient(135deg,#E8F4F5 0%, #C9E2E5 100%)}
+  .lc-thestom .logo-text{color:#1F8E96;font-weight:600;letter-spacing:.06em;font-size:24px;font-family:Georgia,serif;font-style:italic}
+
+  /* lang */
+  [data-lang="kz"] .ru, [data-lang="ru"] .kz{display:none}
+
+  /* ===== ВРАЩАЮЩИЙСЯ БЕЙДЖ-СТИКЕР ===== */
+  .sticker{
+    position:absolute;top:40px;right:-30px;width:140px;height:140px;z-index:5;pointer-events:none;
+    animation: stick-rotate 22s linear infinite;
+  }
+  @keyframes stick-rotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .sticker svg{width:100%;height:100%;display:block}
+  .sticker .core{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:46px;height:46px;border-radius:50%;
+    background:var(--brand-grad);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 24px rgba(255,217,62,.4);
+    animation: stick-rotate 22s linear infinite reverse;
+  }
+  .sticker .core svg{width:22px;height:22px;color:var(--bg)}
+  @media (max-width:980px){
+    .sticker{top:auto;bottom:20px;right:20px;width:100px;height:100px}
+    .sticker .core{width:36px;height:36px}
+  }
+
+  /* ===== ОТЗЫВЫ ===== */
+  .testimonials{padding:120px 0;position:relative;overflow:hidden}
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+  @media (max-width:900px){.reviews{grid-template-columns:1fr}}
+  .review{
+    padding:32px;border-radius:24px;border:1px solid var(--line);
+    background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    position:relative;transition:transform .3s,border-color .3s;
+  }
+  .review:hover{transform:translateY(-4px);border-color:rgba(255,217,62,.3)}
+  .review .quote-mark{
+    position:absolute;top:-10px;left:24px;width:48px;height:48px;border-radius:12px;
+    background:var(--brand-grad);
+    display:flex;align-items:center;justify-content:center;color:var(--bg);
+    font-family:Georgia,serif;font-size:48px;font-weight:900;line-height:.6;padding-top:8px;
+  }
+  .review p{
+    color:var(--text);font-size:15px;line-height:1.7;margin:24px 0;
+  }
+  .review .author{display:flex;align-items:center;gap:14px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+  .review .avatar{
+    width:48px;height:48px;border-radius:50%;
+    background:linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--accent);font-weight:800;font-family:var(--font-display);font-size:18px;
+    border:1px solid var(--line);
+  }
+  .review .info .name{font-weight:700;font-size:14px}
+  .review .info .role{color:var(--muted);font-size:12px;font-family:var(--font-mono);margin-top:2px}
+  .review .stars{color:var(--accent);font-size:14px;letter-spacing:2px}
+
+  /* ===== FAQ-АККОРДЕОН ===== */
+  .faq-list{display:flex;flex-direction:column;gap:12px;margin-top:48px;max-width:880px;margin-left:auto;margin-right:auto}
+  .faq-item{
+    border:1px solid var(--line);border-radius:18px;
+    background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+    overflow:hidden;transition:border-color .3s;
+  }
+  .faq-item:hover{border-color:rgba(255,217,62,.3)}
+  .faq-question{
+    padding:22px 28px;display:flex;justify-content:space-between;align-items:center;gap:24px;
+    cursor:pointer;font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:.01em;
+    color:var(--text);
+    user-select:none;
+  }
+  .faq-question::after{
+    content:"";flex:0 0 auto;width:32px;height:32px;border-radius:50%;
+    background:var(--bg-3);border:1px solid var(--line);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFD93E' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");
+    background-repeat:no-repeat;background-position:center;background-size:14px;
+    transition:transform .3s;
+  }
+  .faq-item.open .faq-question::after{transform:rotate(180deg)}
+  .faq-answer{
+    max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1);
+  }
+  .faq-answer-inner{
+    padding:0 28px 24px;color:var(--muted);font-size:15px;line-height:1.7;
+  }
+  .faq-item.open .faq-answer{max-height:400px}
+
+  /* ===== МОБИЛЬНОЕ МЕНЮ (бургер) ===== */
+  .burger{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--bg-2);cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;padding:0}
+  .burger span{display:block;width:18px;height:2px;background:var(--text);border-radius:2px;transition:transform .3s, opacity .3s}
+  .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .burger.open span:nth-child(2){opacity:0}
+  .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+  .mobile-menu{
+    position:fixed;inset:64px 0 0 0;z-index:49;
+    background:rgba(6,18,42,.96);backdrop-filter:blur(20px);
+    transform:translateY(-110%);opacity:0;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1), opacity .3s;
+    display:flex;flex-direction:column;padding:32px 24px;gap:8px;overflow-y:auto;
+  }
+  .mobile-menu.open{transform:translateY(0);opacity:1}
+  .mobile-menu a{
+    display:block;padding:18px 4px;font-family:var(--font-display);font-size:22px;letter-spacing:.02em;
+    border-bottom:1px solid var(--line);color:var(--text)
+  }
+  .mobile-menu a:active,.mobile-menu a:hover{color:var(--accent)}
+  .mobile-menu .lang{align-self:flex-start;margin-top:24px}
+  .mobile-menu .cta{margin-top:24px;align-self:flex-start}
+
+  /* ===== ОБЩИЕ ПРАВКИ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ ===== */
+  @media (max-width:900px){
+    .nav, .topbar-inner > div .lang{display:none}
+    .topbar-inner > div .cta{display:none}
+    .burger{display:flex}
+    .topbar-inner{height:64px}
+    .logo{font-size:14px;letter-spacing:.05em}
+    .logo .dotmark{width:6px;height:6px}
+
+    section{padding:72px 0}
+    .container{padding:0 18px}
+
+    .section-head{margin-bottom:36px;flex-direction:column;align-items:flex-start;gap:16px}
+    .section-title{font-size:30px}
+    .section-desc{font-size:14px}
+    .section-tag{font-size:11px}
+
+    .hero{padding:48px 0 64px}
+    .hero-inner{gap:32px}
+    h1.headline{font-size:38px;line-height:1.05}
+    .lead{font-size:15px}
+    .hero-actions{gap:8px}
+    .hero-actions .cta, .hero-actions .cta-ghost{padding:14px 18px;font-size:13px;width:100%;justify-content:center}
+    .hero-stats{grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:36px}
+    .hero-stat .num{font-size:24px}
+    .hero-stat .lbl{font-size:10px}
+
+    .stats{padding:32px 22px;gap:20px;border-radius:24px}
+    .stat .big{font-size:36px}
+    .stat .lbl{font-size:12px}
+
+    .coverage-wrap{padding:24px;gap:24px}
+    .city{padding:12px 0;font-size:14px}
+    .city .count{font-size:11px}
+
+    .formats{grid-template-columns:1fr 1fr;gap:14px}
+    .format-card{aspect-ratio:1/1.2;padding:18px}
+    .format-card .name{font-size:18px}
+    .format-card .label{font-size:11px}
+    .format-card .meta{font-size:11px}
+
+    .case{padding:24px;min-height:280px;border-radius:20px}
+    .case h4{font-size:20px}
+    .case .res{gap:20px;margin-top:20px;padding-top:20px}
+    .case .res div .v{font-size:22px}
+    .cases{gap:16px}
+
+    .step{padding:24px 20px;border-radius:16px}
+    .step h4{font-size:16px}
+    .step p{font-size:13px}
+
+    .service{padding:32px 24px}
+    .service h3{font-size:19px}
+    .service p{font-size:14px}
+    .service-arrow{top:32px;right:24px}
+
+    .clients{padding:48px 0 64px}
+    .clients-head{margin-bottom:32px}
+    .client-card{height:88px;min-width:180px;padding:0 22px}
+    .client-card .logo-text{font-size:16px}
+    .lc-cocacola .logo-text{font-size:22px}
+    .lc-damiastana .logo-text{font-size:15px}
+    .clients-track{gap:20px;animation-duration:30s}
+
+    .contact{gap:24px}
+    .contact-info h3{font-size:24px}
+    .contact-info p{font-size:14px;margin-bottom:24px}
+    .contact-form{padding:24px;border-radius:18px}
+    .contact-row .ico{width:36px;height:36px}
+    .contact-row .val{font-size:14px}
+
+    .topbar-inner > div:last-child > .cta{display:none}
+
+    /* блобы поменьше, чтобы не съедали производительность */
+    .glow{filter:blur(80px);transform:scale(.7) !important}
+  }
+  @media (max-width:560px){
+    .formats{grid-template-columns:1fr}
+    .hero-stats{grid-template-columns:1fr 1fr;gap:14px}
+    .hero-stats .hero-stat:last-child{grid-column:1/-1}
+    .stats{grid-template-columns:1fr 1fr}
+    h1.headline{font-size:34px}
+    .section-title{font-size:26px}
+
+    .photo-badge{font-size:9px;padding:6px 10px}
+    .photo-caption .who{font-size:14px}
+    .photo-caption .where{font-size:10px;letter-spacing:.1em}
+  }
+</style>
+</head>
+<body data-lang="ru">
+
+<!-- Прогресс-бар скролла -->
+<div class="scroll-progress" id="scroll-progress"></div>
+
+<!-- Кастомный курсор -->
+<div class="cursor-ring" id="cursor-ring"></div>
+<div class="cursor-dot" id="cursor-dot"></div>
+
+<!-- ============== TOP BAR ============== -->
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a href="#" class="logo">
+      <b>ORTAMEDIA</b><span class="dotmark"></span><b>BOARDS</b>
+    </a>
+    <nav class="nav">
+      <a href="#services"><span class="ru">Услуги</span><span class="kz">Қызметтер</span></a>
+      <a href="#coverage"><span class="ru">География</span><span class="kz">География</span></a>
+      <a href="#formats"><span class="ru">Форматы</span><span class="kz">Форматтар</span></a>
+      <a href="#cases"><span class="ru">Кейсы</span><span class="kz">Кейстер</span></a>
+      <a href="#clients-anchor"><span class="ru">Клиенты</span><span class="kz">Клиенттер</span></a>
+      <a href="#contact"><span class="ru">Контакты</span><span class="kz">Байланыс</span></a>
+    </nav>
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="lang">
+        <button class="active" onclick="setLang('ru',this)">RU</button>
+        <button onclick="setLang('kz',this)">KZ</button>
+      </div>
+      <button class="cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+        <span class="ru">Получить смету</span><span class="kz">Баға алу</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Мобильное меню -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#services"><span class="ru">Услуги</span><span class="kz">Қызметтер</span></a>
+  <a href="#coverage"><span class="ru">География</span><span class="kz">География</span></a>
+  <a href="#formats"><span class="ru">Форматы</span><span class="kz">Форматтар</span></a>
+  <a href="#cases"><span class="ru">Кейсы</span><span class="kz">Кейстер</span></a>
+  <a href="#clients-anchor"><span class="ru">Клиенты</span><span class="kz">Клиенттер</span></a>
+  <a href="#contact"><span class="ru">Контакты</span><span class="kz">Байланыс</span></a>
+  <div class="lang">
+    <button class="active" onclick="setLang('ru',this)">RU</button>
+    <button onclick="setLang('kz',this)">KZ</button>
+  </div>
+  <button class="cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'});closeMobileMenu()">
+    <span class="ru">Получить смету</span><span class="kz">Баға алу</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <!-- амбиентные блобы -->
+  <div class="glow glow-yellow drift-1" style="width:520px;height:520px;top:-80px;left:-120px"></div>
+  <div class="glow glow-blue drift-2" style="width:600px;height:600px;top:120px;right:-180px;opacity:.45"></div>
+  <div class="glow glow-warm drift-1" style="width:380px;height:380px;bottom:-100px;left:30%;opacity:.35"></div>
+  <div class="container hero-inner">
+    <div>
+      <span class="eyebrow"><span class="dot"></span><span class="ru">DOOH сеть #1 в Казахстане</span><span class="kz">Қазақстандағы №1 DOOH желісі</span></span>
+      <h1 class="headline">
+        <span class="ru"><span class="stroke">Ваш бренд</span><br>на главных <span class="accent">экранах</span><br>страны.</span>
+        <span class="kz"><span class="stroke">Сіздің бренд</span><br>елдің басты <span class="accent">экрандарында</span>.</span>
+      </h1>
+      <p class="lead">
+        <span class="ru">Цифровая наружная реклама нового поколения: 4K LED-экраны, программатик-закупка, реальная аналитика охвата по геолокации и времени.</span>
+        <span class="kz">Жаңа буын сандық сыртқы жарнама: 4K LED-экрандар, бағдарламалы сатып алу, геолокация мен уақыт бойынша нақты аналитика.</span>
+      </p>
+      <div class="hero-actions">
+        <button class="cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+          <span class="ru">Запустить кампанию</span><span class="kz">Науқанды бастау</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <button class="cta-ghost" onclick="document.getElementById('coverage').scrollIntoView({behavior:'smooth'})">
+          <span class="ru">Посмотреть карту</span><span class="kz">Картаны көру</span>
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num"><span data-count="68">0</span><span>+</span></div><div class="lbl"><span class="ru">экранов</span><span class="kz">экран</span></div></div>
+        <div class="hero-stat"><div class="num"><span data-count="40">0</span><span>+</span></div><div class="lbl"><span class="ru">локаций</span><span class="kz">локация</span></div></div>
+        <div class="hero-stat"><div class="num"><span data-count="2.4">0</span><span>М</span></div><div class="lbl"><span class="ru">контактов / день</span><span class="kz">контакт / күн</span></div></div>
+      </div>
+    </div>
+
+    <div class="hero-photo-wrap">
+    <div class="hero-photo">
+      <!-- Если положить файл installation-astana.jpg рядом с HTML, он перекроет SVG -->
+      <img src="installation-astana.jpg" alt="ORTAMEDIABOARDS · Astana installation"
+           onload="this.parentElement.classList.add('has-photo')"
+           onerror="this.remove()">
+
+      <!-- SVG-сцена-фолбэк: мечеть Хазрет Султан + city-pole экран Mercedes-Benz -->
+      <svg class="scene" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#9CC6E8"/>
+            <stop offset="55%" stop-color="#C8DFEE"/>
+            <stop offset="100%" stop-color="#E8F0F5"/>
+          </linearGradient>
+          <linearGradient id="dome" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3A7FB5"/>
+            <stop offset="60%" stop-color="#1F5687"/>
+            <stop offset="100%" stop-color="#143F65"/>
+          </linearGradient>
+          <linearGradient id="minaret" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FAF8F2"/>
+            <stop offset="100%" stop-color="#E0DBCC"/>
+          </linearGradient>
+          <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B8B6B0"/>
+            <stop offset="100%" stop-color="#7E7C76"/>
+          </linearGradient>
+          <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0B0B12"/>
+            <stop offset="100%" stop-color="#1A1A24"/>
+          </linearGradient>
+          <linearGradient id="car" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3A4150"/>
+            <stop offset="100%" stop-color="#0E1118"/>
+          </linearGradient>
+          <radialGradient id="screenGlow" cx="50%" cy="35%" r="55%">
+            <stop offset="0%" stop-color="#5C6B82" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#0B0B12" stop-opacity="0"/>
+          </radialGradient>
+          <pattern id="snow" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+            <rect width="6" height="6" fill="#F1F2F4"/>
+            <circle cx="2" cy="2" r=".4" fill="#D8DADC"/>
+            <circle cx="5" cy="4" r=".3" fill="#D8DADC"/>
+          </pattern>
+        </defs>
+
+        <!-- Небо -->
+        <rect width="600" height="560" fill="url(#sky)"/>
+        <!-- Лёгкие облака -->
+        <ellipse cx="120" cy="160" rx="120" ry="14" fill="#fff" opacity=".55"/>
+        <ellipse cx="430" cy="220" rx="160" ry="12" fill="#fff" opacity=".4"/>
+        <ellipse cx="540" cy="120" rx="80" ry="10" fill="#fff" opacity=".5"/>
+
+        <!-- Минареты (4 шт., разные планы) -->
+        <!-- Дальний минарет 1 -->
+        <g>
+          <rect x="246" y="240" width="14" height="240" fill="url(#minaret)"/>
+          <polygon points="245,240 261,240 253,210" fill="#E0DBCC"/>
+          <rect x="244" y="232" width="18" height="6" fill="#CFC9B7"/>
+          <rect x="248" y="265" width="10" height="170" fill="#EFEAD8" opacity=".5"/>
+        </g>
+        <!-- Дальний минарет 2 -->
+        <g>
+          <rect x="690" y="220" width="14" height="260" fill="url(#minaret)"/>
+        </g>
+
+        <!-- Главный передний минарет (как на фото — слева крупно) -->
+        <g>
+          <!-- шпиль -->
+          <polygon points="78,30 102,30 90,0" fill="#D8D2C0"/>
+          <polygon points="80,35 100,35 90,10" fill="#EFEAD8"/>
+          <!-- башня (несколько секций) -->
+          <rect x="74" y="40" width="32" height="60" fill="url(#minaret)"/>
+          <rect x="70" y="100" width="40" height="14" fill="#CFC9B7"/>
+          <rect x="72" y="114" width="36" height="80" fill="url(#minaret)"/>
+          <!-- балкон -->
+          <rect x="64" y="194" width="52" height="10" fill="#B7AE93"/>
+          <rect x="66" y="204" width="48" height="6" fill="#9C9477"/>
+          <!-- основная высота -->
+          <rect x="74" y="210" width="32" height="280" fill="url(#minaret)"/>
+          <!-- декоративные паттерны -->
+          <g opacity=".65" fill="#C9C0A1">
+            <rect x="78" y="240" width="24" height="18"/>
+            <rect x="78" y="270" width="24" height="18"/>
+            <rect x="78" y="300" width="24" height="40"/>
+            <rect x="78" y="350" width="24" height="40"/>
+            <rect x="78" y="400" width="24" height="40"/>
+            <rect x="78" y="450" width="24" height="40"/>
+          </g>
+          <!-- основание -->
+          <rect x="68" y="490" width="44" height="20" fill="#B7AE93"/>
+        </g>
+
+        <!-- Второй передний минарет (правее, чуть дальше) -->
+        <g>
+          <polygon points="170,140 188,140 179,118" fill="#EFEAD8"/>
+          <rect x="168" y="148" width="22" height="4" fill="#CFC9B7"/>
+          <rect x="170" y="152" width="18" height="40" fill="url(#minaret)"/>
+          <rect x="166" y="192" width="26" height="6" fill="#B7AE93"/>
+          <rect x="170" y="198" width="18" height="280" fill="url(#minaret)"/>
+        </g>
+
+        <!-- Главный купол (мечеть) -->
+        <g>
+          <!-- основание -->
+          <rect x="320" y="380" width="240" height="120" fill="#F1ECDC"/>
+          <!-- арка-портал -->
+          <path d="M 380 500 L 380 430 Q 420 380 460 430 L 460 500 Z" fill="#1F2A38"/>
+          <rect x="380" y="495" width="80" height="6" fill="#0F1722"/>
+          <!-- декор сверху портала -->
+          <rect x="372" y="378" width="96" height="10" fill="#1F5687" opacity=".5"/>
+          <!-- купол -->
+          <path d="M 340 380 Q 420 280 540 380 Z" fill="url(#dome)"/>
+          <!-- ребра купола -->
+          <g stroke="#0E2C48" stroke-width="1" opacity=".6">
+            <path d="M 360 380 Q 420 295 460 380" fill="none"/>
+            <path d="M 380 380 Q 420 305 440 380" fill="none"/>
+            <path d="M 480 380 Q 460 305 440 380" fill="none"/>
+            <path d="M 510 380 Q 470 295 440 380" fill="none"/>
+          </g>
+          <!-- наконечник -->
+          <rect x="438" y="270" width="4" height="14" fill="#C9A24E"/>
+          <circle cx="440" cy="266" r="5" fill="#E5C56A"/>
+          <!-- маленькие купола по бокам -->
+          <path d="M 320 420 Q 330 395 340 420 Z" fill="url(#dome)"/>
+          <path d="M 540 420 Q 550 395 560 420 Z" fill="url(#dome)"/>
+        </g>
+
+        <!-- Земля / снег / плитка -->
+        <rect x="0" y="500" width="600" height="300" fill="url(#ground)"/>
+        <!-- снежные сугробы -->
+        <path d="M 0 540 Q 150 520 300 540 L 300 580 L 0 580 Z" fill="url(#snow)"/>
+        <path d="M 380 540 Q 480 525 600 545 L 600 600 L 380 600 Z" fill="url(#snow)"/>
+        <!-- плитка -->
+        <g stroke="#5E5C57" stroke-width=".6" opacity=".4">
+          <line x1="0" y1="620" x2="600" y2="620"/>
+          <line x1="0" y1="660" x2="600" y2="660"/>
+          <line x1="0" y1="700" x2="600" y2="700"/>
+          <line x1="0" y1="740" x2="600" y2="740"/>
+          <line x1="100" y1="600" x2="100" y2="800"/>
+          <line x1="200" y1="600" x2="200" y2="800"/>
+          <line x1="300" y1="600" x2="300" y2="800"/>
+          <line x1="400" y1="600" x2="400" y2="800"/>
+          <line x1="500" y1="600" x2="500" y2="800"/>
+        </g>
+
+        <!-- Ступени мечети -->
+        <g fill="#9C9A93" stroke="#6B6964" stroke-width=".5">
+          <rect x="320" y="500" width="240" height="6"/>
+          <rect x="316" y="506" width="248" height="6" fill="#A8A69E"/>
+          <rect x="312" y="512" width="256" height="6" fill="#B0AEA6"/>
+          <rect x="308" y="518" width="264" height="6" fill="#A8A69E"/>
+        </g>
+
+        <!-- ===== CITY-POLE DOOH экран ===== -->
+        <g>
+          <!-- основание -->
+          <rect x="240" y="700" width="80" height="14" fill="#0F141A"/>
+          <rect x="244" y="714" width="72" height="6" fill="#070A0F"/>
+          <!-- корпус экрана -->
+          <rect x="248" y="380" width="64" height="320" rx="3" fill="#0A0C12"/>
+          <rect x="252" y="384" width="56" height="312" rx="2" fill="url(#screen)"/>
+          <!-- содержимое экрана: рекламный креатив Mercedes -->
+          <g clip-path="inset(0 round 2)">
+            <rect x="252" y="384" width="56" height="312" fill="#0B0B12"/>
+            <rect x="252" y="384" width="56" height="312" fill="url(#screenGlow)"/>
+            <!-- логотип-звезда Mercedes -->
+            <g transform="translate(280,420)">
+              <circle r="11" fill="none" stroke="#D6DAE0" stroke-width="1.2"/>
+              <g stroke="#D6DAE0" stroke-width="1.4" stroke-linecap="round">
+                <line x1="0" y1="-9" x2="0" y2="0"/>
+                <line x1="0" y1="0" x2="7.8" y2="4.5"/>
+                <line x1="0" y1="0" x2="-7.8" y2="4.5"/>
+              </g>
+            </g>
+            <!-- автомобиль (силуэт) -->
+            <g transform="translate(280,540)">
+              <ellipse cx="0" cy="22" rx="28" ry="4" fill="#000" opacity=".55"/>
+              <path d="M -28 18 Q -22 -2 -8 -8 Q 0 -12 8 -8 Q 22 -2 28 18 Z" fill="url(#car)"/>
+              <path d="M -18 4 Q -10 -4 0 -5 Q 10 -4 18 4 L 14 12 L -14 12 Z" fill="#1B2030" opacity=".85"/>
+              <circle cx="-16" cy="20" r="5" fill="#0A0C12" stroke="#444" stroke-width=".6"/>
+              <circle cx="-16" cy="20" r="2.5" fill="#7C8390"/>
+              <circle cx="16" cy="20" r="5" fill="#0A0C12" stroke="#444" stroke-width=".6"/>
+              <circle cx="16" cy="20" r="2.5" fill="#7C8390"/>
+              <!-- фары -->
+              <rect x="-26" y="8" width="6" height="3" rx="1" fill="#E8F0FF" opacity=".9"/>
+              <rect x="20" y="8" width="6" height="3" rx="1" fill="#E8F0FF" opacity=".9"/>
+            </g>
+            <!-- надпись -->
+            <text x="280" y="640" text-anchor="middle" fill="#F1F3F6" font-family="'NEXT ART', system-ui" font-weight="600" font-size="11" letter-spacing="0.5">Mercedes-Benz</text>
+            <text x="280" y="660" text-anchor="middle" fill="#7C8390" font-family="'JetBrains Mono', monospace" font-size="6" letter-spacing="2">THE NEW GLE</text>
+
+            <!-- скан-линия LED -->
+            <rect x="252" y="384" width="56" height="60" fill="url(#screenGlow)" opacity=".5">
+              <animate attributeName="y" from="384" to="640" dur="3.6s" repeatCount="indefinite"/>
+            </rect>
+          </g>
+          <!-- блик на экране -->
+          <path d="M 252 384 L 308 384 L 290 460 L 252 460 Z" fill="#fff" opacity=".05"/>
+          <!-- тень от стенда -->
+          <ellipse cx="280" cy="718" rx="60" ry="6" fill="#000" opacity=".35"/>
+        </g>
+
+        <!-- Силуэт человека (как на фото — слева, в шляпе/шапке) -->
+        <g transform="translate(72,640)">
+          <ellipse cx="0" cy="118" rx="22" ry="3" fill="#000" opacity=".4"/>
+          <!-- голова -->
+          <circle cx="0" cy="-5" r="7" fill="#3A2E22"/>
+          <!-- кепка -->
+          <path d="M -9 -7 Q 0 -16 9 -7 L 9 -3 L -9 -3 Z" fill="#0F1218"/>
+          <rect x="-9" y="-4" width="18" height="2" fill="#1A1F28"/>
+          <!-- пальто -->
+          <path d="M -12 4 Q -14 60 -10 100 L 10 100 Q 14 60 12 4 Q 6 -2 0 -2 Q -6 -2 -12 4 Z" fill="#101319"/>
+          <!-- рука -->
+          <path d="M -11 24 Q -16 50 -14 76 L -8 76 Q -8 50 -6 26 Z" fill="#0B0E13"/>
+          <!-- ноги -->
+          <rect x="-9" y="100" width="7" height="20" fill="#0B0E13"/>
+          <rect x="2" y="100" width="7" height="20" fill="#0B0E13"/>
+        </g>
+
+        <!-- Ограждение -->
+        <g stroke="#5C5A55" stroke-width="1" opacity=".7">
+          <line x1="340" y1="540" x2="600" y2="535"/>
+          <line x1="340" y1="555" x2="600" y2="550"/>
+          <g stroke-width="1.2">
+            <line x1="360" y1="510" x2="360" y2="560"/>
+            <line x1="420" y1="510" x2="420" y2="555"/>
+            <line x1="480" y1="510" x2="480" y2="552"/>
+            <line x1="540" y1="510" x2="540" y2="548"/>
+            <line x1="600" y1="510" x2="600" y2="545"/>
+          </g>
+        </g>
+
+        <!-- Засветка солнца -->
+        <circle cx="540" cy="80" r="40" fill="#fff" opacity=".55"/>
+        <circle cx="540" cy="80" r="20" fill="#fff" opacity=".9"/>
+      </svg>
+
+      <span class="photo-badge live">LIVE NOW</span>
+      <span class="photo-badge geo">ASTANA · KZ</span>
+      <div class="photo-caption">
+        <div>
+          <div class="who">РЕСПУБЛИКАЛЫҚ БАС МЕШІТ,</div>
+          <div class="where">МӘҢГІЛІК ЕЛ 65, 1980*4980 P4</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== TICKER ============== -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>● <strong>LIVE</strong> · ALMATY / Абая—Розыбакиева · 4K · 12s slot</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Кабанбай батыра · 6×3 m · LED P6</span>
+    <span>● <strong>LIVE</strong> · SHYMKENT / Тауке хана · Mall · 32"×16"</span>
+    <span>● <strong>LIVE</strong> · KARAGANDA / Бухар Жырау · 8×4 m</span>
+    <span>● <strong>LIVE</strong> · АТЫРАУ / Сатпаева · DOOH · brightness 7500 nit</span>
+    <span>● <strong>LIVE</strong> · ALMATY / Абая—Розыбакиева · 4K · 12s slot</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Кабанбай батыра · 6×3 m · LED P6</span>
+    <span>● <strong>LIVE</strong> · SHYMKENT / Тауке хана · Mall · 32"×16"</span>
+    <span>● <strong>LIVE</strong> · KARAGANDA / Бухар Жырау · 8×4 m</span>
+    <span>● <strong>LIVE</strong> · АТЫРАУ / Сатпаева · DOOH · brightness 7500 nit</span>
+  </div>
+</div>
+
+<!-- ============== SERVICES ============== -->
+<section id="services">
+  <div class="mesh-bg warm"></div>
+  <div class="glow glow-yellow drift-1" style="width:380px;height:380px;top:80px;right:-150px;opacity:.25"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">01 / <span class="ru">Услуги</span><span class="kz">Қызметтер</span></div>
+        <h2 class="section-title">
+          <span class="ru">Полный цикл размещения <span class="grad">DOOH</span></span>
+          <span class="kz">Толық DOOH орналастыру циклі</span>
+        </h2>
+      </div>
+      <p class="section-desc">
+        <span class="ru">От стратегии до пост-кампейн отчёта. Работаем по программатик и прямым закупкам.</span>
+        <span class="kz">Стратегиядан кейінгі есепке дейін. Бағдарламалы және тікелей сатып алумен жұмыс істейміз.</span>
+      </p>
+    </div>
+
+    <div class="services-grid reveal stagger">
+      <div class="service">
+        <div class="service-num">01</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+        </div>
+        <h3><span class="ru">Размещение на LED-экранах</span><span class="kz">LED-экрандарға орналастыру</span></h3>
+        <p><span class="ru">68+ LED-экранов в премиум-локациях Астаны. Точная геотаргетинг и таймслоты.</span><span class="kz">Астананың премиум-локацияларында 68+ LED-экран. Дәл геотаргетинг.</span></p>
+      </div>
+      <div class="service">
+        <div class="service-num">02</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
+        </div>
+        <h3><span class="ru">Programmatic DOOH</span><span class="kz">Programmatic DOOH</span></h3>
+        <p><span class="ru">Автоматизированная закупка по триггерам: погода, трафик, время суток, аудитория.</span><span class="kz">Триггерлер бойынша автоматтандырылған сатып алу: ауа райы, трафик, уақыт.</span></p>
+      </div>
+      <div class="service">
+        <div class="service-num">03</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg>
+        </div>
+        <h3><span class="ru">Креатив и продакшн</span><span class="kz">Креатив және продакшн</span></h3>
+        <p><span class="ru">Адаптация и создание роликов под форматы экранов. 2D/3D-моушн, динамические креативы.</span><span class="kz">Экран форматтарына бейімдеу мен ролик жасау. 2D/3D-моушн.</span></p>
+      </div>
+      <div class="service">
+        <div class="service-num">04</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 21H3V3M7 14l4-4 4 4 5-5"/></svg>
+        </div>
+        <h3><span class="ru">Аналитика и отчёты</span><span class="kz">Аналитика және есептер</span></h3>
+        <p><span class="ru">OTS, контакты, частота, post-buy анализ. Интеграция с Yandex Metrica и GA4.</span><span class="kz">OTS, контакттар, post-buy талдау. Yandex Metrica мен GA4 интеграциясы.</span></p>
+      </div>
+      <div class="service">
+        <div class="service-num">05</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6l-8-4z"/></svg>
+        </div>
+        <h3><span class="ru">Брендирование локаций</span><span class="kz">Локацияларды брендтеу</span></h3>
+        <p><span class="ru">Эксклюзивный takeover крупных перекрёстков и фасадов на длительный срок.</span><span class="kz">Қиылыстар мен фасадтарды эксклюзивті takeover.</span></p>
+      </div>
+      <div class="service">
+        <div class="service-num">06</div>
+        <div class="service-arrow"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+        <div class="service-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </div>
+        <h3><span class="ru">Интеграции и API</span><span class="kz">Интеграциялар және API</span></h3>
+        <p><span class="ru">Запуск из вашей DSP. Подключение к The Trade Desk, Hivestack, VIOOH.</span><span class="kz">Сіздің DSP-тен қосу. The Trade Desk, Hivestack, VIOOH.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== STATS ============== -->
+<section style="padding-top:0">
+  <div class="container reveal">
+    <div class="stats">
+      <div class="stat"><div class="big"><span data-count="68">0</span><span>+</span></div><div class="lbl"><span class="ru">LED-экранов в Астане</span><span class="kz">Астанадағы LED-экрандар</span></div></div>
+      <div class="stat"><div class="big"><span data-count="40">0</span><span>+</span></div><div class="lbl"><span class="ru">премиум-локаций</span><span class="kz">премиум локация</span></div></div>
+      <div class="stat"><div class="big"><span data-count="2.4">0</span><span>М</span></div><div class="lbl"><span class="ru">контактов в день</span><span class="kz">күніне контакт</span></div></div>
+      <div class="stat"><div class="big"><span data-count="99.7">0</span><span>%</span></div><div class="lbl"><span class="ru">аптайм трансляций</span><span class="kz">трансляция аптаймы</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== COVERAGE — ЛОКАЦИИ В АСТАНЕ ============== -->
+<section id="coverage">
+  <div class="mesh-bg cool"></div>
+  <div class="glow glow-blue drift-2" style="width:480px;height:480px;top:0;left:-200px;opacity:.3"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">02 / <span class="ru">Локации в Астане</span><span class="kz">Астанадағы локациялар</span></div>
+        <h2 class="section-title">
+          <span class="ru">Премиальные точки <span class="grad">всей столицы</span></span>
+          <span class="kz">Астананың <span class="grad">премиум нүктелері</span></span>
+        </h2>
+      </div>
+      <p class="section-desc">
+        <span class="ru">Главные магистрали, мечети, ТРЦ, бизнес-кварталы — наши экраны стоят там, где живёт ваша аудитория.</span>
+        <span class="kz">Басты магистральдар, мешіттер, ТРО, бизнес-аудандар — экрандар сіздің аудиторияңыз бар жерде.</span>
+      </p>
+    </div>
+
+    <div class="coverage-wrap reveal">
+      <div class="city-list">
+        <div class="city active"><span><span class="ru">Хазрет Султан</span><span class="kz">Хазірет Сұлтан</span></span><span class="count">P4 · 6м²</span></div>
+        <div class="city"><span><span class="ru">Кабанбай батыра</span><span class="kz">Қабанбай батыр</span></span><span class="count">P6 · 18м²</span></div>
+        <div class="city"><span><span class="ru">Мангилик Ел</span><span class="kz">Мәңгілік Ел</span></span><span class="count">P4 · 12м²</span></div>
+        <div class="city"><span><span class="ru">пр. Туран</span><span class="kz">Тұран даң.</span></span><span class="count">P6 · 24м²</span></div>
+        <div class="city"><span><span class="ru">Сыганак</span><span class="kz">Сығанақ</span></span><span class="count">P4 · 6м²</span></div>
+        <div class="city"><span><span class="ru">Достык</span><span class="kz">Достық</span></span><span class="count">P6 · 18м²</span></div>
+        <div class="city"><span><span class="ru">МЕГА Silk Way</span><span class="kz">МЕГА Silk Way</span></span><span class="count">indoor · 4K</span></div>
+        <div class="city"><span><span class="ru">Хан Шатыр</span><span class="kz">Хан Шатыр</span></span><span class="count">indoor · 4K</span></div>
+      </div>
+
+      <!-- Карта Астаны (стилизованная) -->
+      <svg class="map-svg" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFD93E" stop-opacity=".9"/>
+            <stop offset="100%" stop-color="#FFD93E" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <!-- Контур города — упрощённое озеро/река Есиль и районы -->
+        <rect x="0" y="0" width="600" height="360" fill="#0C1B33"/>
+        <!-- сетка -->
+        <g stroke="#1A2C52" stroke-width="0.5" opacity=".5">
+          <line x1="0" y1="90"  x2="600" y2="90"/>
+          <line x1="0" y1="180" x2="600" y2="180"/>
+          <line x1="0" y1="270" x2="600" y2="270"/>
+          <line x1="150" y1="0" x2="150" y2="360"/>
+          <line x1="300" y1="0" x2="300" y2="360"/>
+          <line x1="450" y1="0" x2="450" y2="360"/>
+        </g>
+        <!-- река Есиль (Ишим) -->
+        <path d="M 40 280 Q 160 220 280 240 Q 380 260 460 200 Q 540 140 580 100"
+              fill="none" stroke="#1F4D7A" stroke-width="14" stroke-linecap="round" opacity=".55"/>
+        <path d="M 40 280 Q 160 220 280 240 Q 380 260 460 200 Q 540 140 580 100"
+              fill="none" stroke="#3A7FB5" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+
+        <!-- основные магистрали -->
+        <g stroke="#2A4170" stroke-width="2" opacity=".7" fill="none">
+          <path d="M 80 60 L 540 320"/>
+          <path d="M 100 320 L 520 60"/>
+          <path d="M 60 180 L 560 180"/>
+        </g>
+
+        <!-- Главная локация — Хазрет Султан (active) -->
+        <circle cx="380" cy="160" r="44" fill="url(#glow)"/>
+        <circle cx="380" cy="160" r="7" fill="#FFD93E"/>
+        <circle cx="380" cy="160" r="11" fill="none" stroke="#FFD93E" stroke-width="1.2">
+          <animate attributeName="r" from="7" to="26" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <text x="396" y="156" fill="#fff" font-family="JetBrains Mono" font-size="11" font-weight="500">HAZRET SULTAN</text>
+        <text x="396" y="170" fill="#FFD93E" font-family="JetBrains Mono" font-size="9">P4 · 6m²</text>
+
+        <!-- Остальные локации -->
+        <g font-family="JetBrains Mono" fill="#EEF1F6">
+          <circle cx="280" cy="120" r="5" fill="#FFD93E"/>
+          <text x="290" y="118" font-size="10">KABANBAY BATYR</text>
+
+          <circle cx="450" cy="220" r="5" fill="#FFD93E"/>
+          <text x="460" y="220" font-size="10">MӘŃGILIK EL</text>
+
+          <circle cx="180" cy="230" r="4.5" fill="#FFD93E"/>
+          <text x="60"  y="222" font-size="10" fill="#8A91A0">TURAN AVE</text>
+
+          <circle cx="220" cy="100" r="4" fill="#FFD93E"/>
+          <text x="100" y="92"  font-size="10" fill="#8A91A0">SYGHANAQ</text>
+
+          <circle cx="500" cy="100" r="4" fill="#FFD93E"/>
+          <text x="500" y="92"  font-size="10" fill="#8A91A0">DOSTYQ</text>
+
+          <circle cx="120" cy="160" r="4" fill="#FFD93E"/>
+          <text x="20"  y="152" font-size="10" fill="#8A91A0">MEGA SILK WAY</text>
+
+          <circle cx="540" cy="280" r="4" fill="#FFD93E"/>
+          <text x="430" y="276" font-size="10" fill="#8A91A0">KHAN SHATYR</text>
+        </g>
+
+        <!-- Подпись: ASTANA -->
+        <text x="30" y="38" fill="#FFD93E" font-family="JetBrains Mono" font-size="13" font-weight="700" letter-spacing="3">ASTANA · KZ</text>
+        <text x="30" y="54" fill="#8A91A0" font-family="JetBrains Mono" font-size="9" letter-spacing="2">68+ LED SCREENS</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FORMATS ============== -->
+<section id="formats" style="padding-top:0">
+  <div class="mesh-bg warm"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">03 / <span class="ru">Форматы</span><span class="kz">Форматтар</span></div>
+        <h2 class="section-title">
+          <span class="ru">Любой формат под задачу</span>
+          <span class="kz">Кез келген тапсырмаға формат</span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="formats reveal stagger">
+      <div class="format-card"><div class="format-bg fb1"></div>
+        <div class="label">FORMAT / 01</div>
+        <div class="name"><span class="ru">Билборды</span><span class="kz">Билбордтар</span></div>
+        <div class="meta">6×3 m · LED P6 · 7500 nit</div>
+      </div>
+      <div class="format-card"><div class="format-bg fb2"></div>
+        <div class="label">FORMAT / 02</div>
+        <div class="name"><span class="ru">Медиафасады</span><span class="kz">Медиа-фасадтар</span></div>
+        <div class="meta">100+ m² · 4K · custom</div>
+      </div>
+      <div class="format-card"><div class="format-bg fb3"></div>
+        <div class="label">FORMAT / 03</div>
+        <div class="name"><span class="ru">Сити-форматы</span><span class="kz">Сити-форматтар</span></div>
+        <div class="meta">1.2×1.8 m · vertical</div>
+      </div>
+      <div class="format-card"><div class="format-bg fb4"></div>
+        <div class="label">FORMAT / 04</div>
+        <div class="name"><span class="ru">Indoor / ТРЦ</span><span class="kz">Indoor / ТРО</span></div>
+        <div class="meta">32"–86" · network</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== HOW IT WORKS ============== -->
+<section style="padding-top:0">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">04 / <span class="ru">Процесс</span><span class="kz">Үдеріс</span></div>
+        <h2 class="section-title">
+          <span class="ru">От брифа до запуска <span class="grad">за 5 дней</span></span>
+          <span class="kz">Брифтен бастап іске қосуға дейін <span class="grad">5 күнде</span></span>
+        </h2>
+      </div>
+    </div>
+
+    <div class="steps reveal stagger">
+      <div class="step">
+        <div class="step-num">STEP 01</div>
+        <h4><span class="ru">Бриф и стратегия</span><span class="kz">Бриф және стратегия</span></h4>
+        <p><span class="ru">Анализируем задачу, аудиторию и подбираем оптимальные локации.</span><span class="kz">Тапсырманы талдап, локацияларды таңдаймыз.</span></p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 02</div>
+        <h4><span class="ru">Медиаплан</span><span class="kz">Медиажоспар</span></h4>
+        <p><span class="ru">Готовим план с прогнозом OTS, частоты и стоимости контакта.</span><span class="kz">OTS, жиілік, контакт құны бар жоспар.</span></p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 03</div>
+        <h4><span class="ru">Креатив</span><span class="kz">Креатив</span></h4>
+        <p><span class="ru">Адаптация ваших материалов или продакшн с нуля под форматы.</span><span class="kz">Материалдарды бейімдеу немесе нөлден жасау.</span></p>
+      </div>
+      <div class="step">
+        <div class="step-num">STEP 04</div>
+        <h4><span class="ru">Запуск и отчёт</span><span class="kz">Іске қосу және есеп</span></h4>
+        <p><span class="ru">Реальное время в эфире, фото-отчёты, post-buy аналитика.</span><span class="kz">Эфирдегі нақты уақыт, фото-есеп, post-buy.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CASES ============== -->
+<section id="cases" style="padding-top:0">
+  <div class="mesh-bg cool"></div>
+  <div class="glow glow-yellow drift-1" style="width:420px;height:420px;bottom:-100px;right:-150px;opacity:.25"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">05 / <span class="ru">Кейсы</span><span class="kz">Кейстер</span></div>
+        <h2 class="section-title">
+          <span class="ru">Бренды, которые нам доверяют</span>
+          <span class="kz">Бізге сенетін брендтер</span>
+        </h2>
+      </div>
+    </div>
+    <div class="cases reveal">
+      <div class="case c1">
+        <div class="brand">Kaspi.kz · 2025</div>
+        <h4><span class="ru">Запуск Kaspi Pay в 6 регионах</span><span class="kz">6 өңірде Kaspi Pay-ды іске қосу</span></h4>
+        <div class="res">
+          <div><div class="v">+38%</div><div class="l"><span class="ru">узнаваемость</span><span class="kz">танымалдылық</span></div></div>
+          <div><div class="v">12М</div><div class="l">OTS</div></div>
+          <div><div class="v">14</div><div class="l"><span class="ru">дней</span><span class="kz">күн</span></div></div>
+        </div>
+      </div>
+      <div class="case c2">
+        <div class="brand">Halyk Bank · 2025</div>
+        <h4><span class="ru">Programmatic-кампания «Ипотека 7%»</span><span class="kz">Programmatic «Ипотека 7%»</span></h4>
+        <div class="res">
+          <div><div class="v">×3.4</div><div class="l">CTR uplift</div></div>
+          <div><div class="v">−27%</div><div class="l">CPM</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ОТЗЫВЫ ============== -->
+<section class="testimonials" style="padding-top:0">
+  <div class="mesh-bg warm"></div>
+  <div class="glow glow-yellow drift-1" style="width:420px;height:420px;top:60px;left:-160px;opacity:.22"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">— / <span class="ru">Отзывы</span><span class="kz">Пікірлер</span></div>
+        <h2 class="section-title">
+          <span class="ru">Что говорят <span class="grad">клиенты</span></span>
+          <span class="kz"><span class="grad">Клиенттер</span> не дейді</span>
+        </h2>
+      </div>
+    </div>
+    <div class="reviews reveal stagger">
+      <div class="review">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <p>
+          <span class="ru">Запустили кампанию за 3 дня по всей Астане. Узнаваемость бренда выросла на 42% по нашим внутренним замерам, поток в кофейни — на треть. Команда на связи 24/7.</span>
+          <span class="kz">3 күнде Астана бойынша науқан іске қосылды. Бренд танымалдығы 42%-ға өсті, кофеханаларға келушілер саны үштен бірге артты.</span>
+        </p>
+        <div class="author">
+          <div class="avatar">TLP</div>
+          <div class="info">
+            <div class="name"><span class="ru">Айгерим Сериковна</span><span class="kz">Айгерім Серікқызы</span></div>
+            <div class="role">CMO · TLP Flowers &amp; Coffee</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <p>
+          <span class="ru">Programmatic-закупка с триггерами по погоде сработала идеально для нашей акции. CPM упал на 27%, при этом охват выше прогноза. Будем работать дальше.</span>
+          <span class="kz">Programmatic сатып алу науқанға тамаша келді. CPM 27%-ға төмендеді, қамту жоспардан жоғары болды.</span>
+        </p>
+        <div class="author">
+          <div class="avatar">DM</div>
+          <div class="info">
+            <div class="name"><span class="ru">Дамир Молдабаев</span><span class="kz">Дамир Молдабаев</span></div>
+            <div class="role">Brand Lead · DAMI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <p>
+          <span class="ru">Размещали наружную рекламу клиники на главных перекрёстках. За 2 месяца рост заявок на консультации вырос вдвое. Команда подсказала идеальные локации.</span>
+          <span class="kz">Клиниканы негізгі қиылыстарда орналастырдық. 2 ай ішінде кеңеске жазылу екі есе өсті.</span>
+        </p>
+        <div class="author">
+          <div class="avatar">SD</div>
+          <div class="info">
+            <div class="name"><span class="ru">Алия Тулегенова</span><span class="kz">Әлия Төлегенова</span></div>
+            <div class="role">Director · Sapa Dent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FAQ ============== -->
+<section class="faq-section" style="padding-top:0">
+  <div class="mesh-bg cool"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-tag">FAQ / <span class="ru">Вопросы</span><span class="kz">Сұрақтар</span></div>
+        <h2 class="section-title">
+          <span class="ru">Часто <span class="grad">спрашивают</span></span>
+          <span class="kz">Жиі <span class="grad">сұрайды</span></span>
+        </h2>
+      </div>
+    </div>
+    <div class="faq-list reveal stagger">
+      <div class="faq-item">
+        <div class="faq-question">
+          <span class="ru">Какой минимальный бюджет на кампанию?</span>
+          <span class="kz">Науқанға минимум бюджет қандай?</span>
+        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <span class="ru">Минимальный бюджет на DOOH-кампанию у нас — от 500 000 ₸ за неделю в одном городе. Это даёт реальный охват и позволяет получить корректные post-buy данные. Под programmatic-закупку — от 300 000 ₸.</span>
+          <span class="kz">DOOH науқанының минимум бюджеті — бір қалада бір аптаға 500 000 ₸-ден. Programmatic үшін — 300 000 ₸-ден.</span>
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span class="ru">Сколько времени занимает запуск?</span>
+          <span class="kz">Іске қосуға қанша уақыт кетеді?</span>
+        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <span class="ru">Стандартно — 5 рабочих дней с момента подписания договора: 1 день — медиаплан, 2–3 дня — креатив (если нужно адаптировать или сделать с нуля), 1 день — финальная заливка на экраны. Срочные кампании запускаем за 24 часа.</span>
+          <span class="kz">Стандартты түрде — 5 жұмыс күні: медиажоспар, креатив, экранға жүктеу. Шұғыл науқан 24 сағатта іске қосылады.</span>
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span class="ru">Можно ли таргетировать рекламу по времени и аудитории?</span>
+          <span class="kz">Жарнаманы уақыт пен аудитория бойынша таргеттеуге бола ма?</span>
+        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <span class="ru">Да. Можно выбирать конкретные таймслоты (час пик, выходные, ночь), а через programmatic — добавлять триггеры по погоде, трафику, событиям. По аудитории — выбираем локации с нужным портретом (бизнес-районы, ТРЦ, спальные районы).</span>
+          <span class="kz">Иә. Уақыт слоттарын таңдай аласыз, programmatic арқылы — ауа райы, трафик бойынша триггерлер.</span>
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span class="ru">Что входит в пост-кампейн отчёт?</span>
+          <span class="kz">Post-campaign есепке не кіреді?</span>
+        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <span class="ru">Полный набор: фактические показы, OTS (opportunity to see), частота контакта, разбивка по локациям и таймслотам, фото-отчёты с экранов в эфире, скрин-логи воспроизведения, сравнение с прогнозом из медиаплана. По запросу — интеграция с Yandex Metrica / GA4 для подтверждения uplift.</span>
+          <span class="kz">Толық пакет: көрсетілімдер, OTS, жиілік, локациялар бойынша бөліну, фото-есеп, медиажоспармен салыстыру.</span>
+        </div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">
+          <span class="ru">Делаете ли вы креатив или нужен готовый ролик?</span>
+          <span class="kz">Креативті өздеріңіз жасайсыздар ма?</span>
+        </div>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          <span class="ru">У нас своя продакшн-команда. Можем адаптировать ваши готовые материалы под форматы экранов или сделать креатив с нуля — 2D/3D-моушн, динамические сцены, анаморфные ролики для угловых экранов. Стоимость — отдельной строкой в КП.</span>
+          <span class="kz">Өз продакшн-командамыз бар. Дайын материалды бейімдейміз немесе нөлден жасаймыз.</span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== НАШИ КЛИЕНТЫ ============== -->
+<section class="clients" id="clients-anchor" style="padding-top:0">
+  <div class="mesh-bg"></div>
+  <div class="container">
+    <div class="clients-head reveal">
+      <div class="section-tag">06 / <span class="ru">Клиенты</span><span class="kz">Клиенттер</span></div>
+      <h2 class="section-title">
+        <span class="ru">Бренды, которые с нами</span>
+        <span class="kz">Бізбен жұмыс істейтін брендтер</span>
+      </h2>
+    </div>
+  </div>
+
+  <div class="clients-marquee reveal-scale">
+    <div class="clients-track" id="clients-track">
+      <!-- Карточки заполняются скриптом ниже, чтобы не дублировать вручную -->
+    </div>
+  </div>
+
+  <script>
+    // Inline SVG-логотипы — повторяют структуру оригиналов, чтобы при отсутствии PNG карточки не теряли узнаваемости
+    const _waqfSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <defs><path id="topArc" d="M 22 60 A 78 78 0 0 1 178 60"/><path id="botArc" d="M 30 70 A 70 70 0 0 0 170 70"/></defs>
+      <circle cx="100" cy="60" r="56" fill="#FFC93C" stroke="#1F8C4A" stroke-width="6"/>
+      <circle cx="100" cy="60" r="50" fill="none" stroke="#fff" stroke-width="2.5"/>
+      <polygon points="100,18 110,48 142,48 116,67 126,98 100,80 74,98 84,67 58,48 90,48" fill="#1F8C4A"/>
+      <text fill="#fff" font-family="Georgia, serif" font-size="11.5" font-weight="700" letter-spacing="1.2" dy="-2">
+        <textPath href="#topArc" startOffset="50%" text-anchor="middle">QAZAQSTAN MUSYLMANDARY DINI BASQARMASY</textPath>
+      </text>
+      <text fill="#fff" font-family="Georgia, serif" font-size="11" font-weight="700" letter-spacing="3" dy="9">
+        <textPath href="#botArc" startOffset="50%" text-anchor="middle">WAQF QORY</textPath>
+      </text>
+      <text x="100" y="65" text-anchor="middle" fill="#fff" font-family="Georgia, serif" font-weight="900" font-size="17" letter-spacing="2">QMDB</text>
+      <text x="100" y="84" text-anchor="middle" fill="#fff" font-family="Georgia, serif" font-weight="900" font-size="14" letter-spacing="2">WAQF</text>
+    </svg>`;
+
+    const _bokenSVG = `<svg class="logo-svg" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- крыша-домик над буквой A -->
+      <path d="M 180 24 L 200 8 L 220 24 L 220 32 L 215 32 L 215 24 L 200 14 L 185 24 Z" fill="#0E5BAB"/>
+      <rect x="208" y="16" width="6" height="6" fill="#0E5BAB"/>
+      <text x="130" y="62" text-anchor="middle" fill="#0E5BAB" font-family="Arial, sans-serif" font-weight="900" font-size="34" letter-spacing="-1">BOKEN</text>
+      <rect x="178" y="48" width="64" height="22" rx="2" fill="#0E5BAB"/>
+      <text x="210" y="65" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-weight="900" font-size="18" letter-spacing="0">TAU</text>
+      <text x="130" y="92" text-anchor="middle" fill="#0E5BAB" font-family="Arial, sans-serif" font-weight="500" font-size="11" letter-spacing="6">C O M P A N Y</text>
+    </svg>`;
+
+    const _egSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- стилизованный орёл -->
+      <g transform="translate(100,40)">
+        <path d="M -42 -8 Q -28 -18 -10 -14 Q 4 -18 18 -10 Q 30 -4 38 4 L 30 8 Q 22 4 14 4 Q 2 4 -8 8 Q -22 12 -36 8 Z" fill="#D8232A"/>
+        <path d="M -38 -2 Q -22 -8 -4 -4 Q 14 0 30 6 L 28 12 Q 12 8 -2 10 Q -22 12 -38 8 Z" fill="#0E2954"/>
+        <polygon points="0,-2 1,1 4,1 1.5,3 2.5,6 0,4 -2.5,6 -1.5,3 -4,1 -1,1" fill="#fff"/>
+        <polygon points="-12,2 -11,5 -8,5 -10.5,7 -9.5,10 -12,8 -14.5,10 -13.5,7 -16,5 -13,5" fill="#fff"/>
+        <circle cx="22" cy="-6" r="1.5" fill="#0E2954"/>
+      </g>
+      <text x="100" y="84" text-anchor="middle" fill="#0E2954" font-family="Arial Black, sans-serif" font-weight="900" font-size="20" letter-spacing="2">EG GROUP</text>
+      <text x="100" y="100" text-anchor="middle" fill="#D8232A" font-family="Arial, sans-serif" font-weight="600" font-size="9" letter-spacing="3">WORK AND STUDY</text>
+    </svg>`;
+
+    const _damiSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="100" cy="60" r="55" fill="#A622D2"/>
+      <polygon points="38,55 41,58 38,61 35,58" fill="#fff"/>
+      <text x="100" y="68" text-anchor="middle" fill="#fff" font-family="Arial Black, sans-serif" font-weight="900" font-size="28" letter-spacing="3">DAMI</text>
+      <polygon points="162,55 165,58 162,61 159,58" fill="#fff"/>
+      <text x="100" y="86" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-weight="700" font-size="9" letter-spacing="1.5">әlemdik tağamdar</text>
+    </svg>`;
+
+    const _dasturSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="120" fill="#F6EFDF"/>
+      <!-- этно-ромб -->
+      <g transform="translate(100,40) rotate(45)">
+        <rect x="-20" y="-20" width="40" height="40" fill="none" stroke="#A66B2C" stroke-width="2.5"/>
+        <path d="M -14 -14 L 0 0 L -14 14 M 14 -14 L 0 0 L 14 14" stroke="#A66B2C" stroke-width="2" fill="none"/>
+      </g>
+      <text x="100" y="86" text-anchor="middle" fill="#1A1A1A" font-family="Georgia, serif" font-weight="700" font-size="24" letter-spacing="3">DASTUR</text>
+      <text x="100" y="102" text-anchor="middle" fill="#8B6A3A" font-family="Arial, sans-serif" font-weight="500" font-size="8.5" letter-spacing="6">E T H N O   W E A R</text>
+    </svg>`;
+
+    const _tlpSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <defs><path id="tlpTopArc" d="M 30 60 A 70 70 0 0 1 170 60"/></defs>
+      <circle cx="100" cy="60" r="55" fill="#0E5236"/>
+      <circle cx="100" cy="60" r="45" fill="none" stroke="#fff" stroke-width="1.5"/>
+      <text fill="#fff" font-family="Arial, sans-serif" font-size="9.5" font-weight="500" letter-spacing="3.5">
+        <textPath href="#tlpTopArc" startOffset="50%" text-anchor="middle">FLOWERS &amp; COFFEE</textPath>
+      </text>
+      <text x="100" y="72" text-anchor="middle" fill="#fff" font-family="Georgia, serif" font-style="italic" font-weight="500" font-size="34" letter-spacing="2">T·L·P</text>
+    </svg>`;
+
+    const _thestomSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tsbg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#E8F4F5"/>
+          <stop offset="100%" stop-color="#C9E2E5"/>
+        </linearGradient>
+      </defs>
+      <rect width="200" height="120" fill="url(#tsbg)"/>
+      <circle cx="100" cy="60" r="50" fill="none" stroke="#1F8E96" stroke-width="3"/>
+      <!-- зуб -->
+      <path d="M 76 38 Q 78 34 84 36 Q 90 38 94 36 Q 100 34 104 36 Q 110 38 114 36 Q 118 34 120 38 Q 122 50 116 62 Q 112 70 110 80 L 108 84 L 104 78 Q 102 70 100 64 L 98 64 Q 96 70 94 76 L 90 84 L 86 80 Q 84 70 80 62 Q 74 50 76 38 Z"
+            fill="none" stroke="#1F8E96" stroke-width="2.2"/>
+      <text x="124" y="68" fill="#1F8E96" font-family="Arial, sans-serif" font-weight="500" font-size="22" letter-spacing="2">TS</text>
+    </svg>`;
+
+    const _filtrdomSVG = `<svg class="logo-svg" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="120" fill="#0E5BAB"/>
+      <text x="100" y="68" text-anchor="middle" fill="#fff" font-family="Arial Black, sans-serif" font-weight="900" font-size="32" letter-spacing="-1">Filtr<tspan fill="#9DC8E8">dom</tspan></text>
+      <path d="M 132 36 Q 140 30 148 36 Q 156 42 164 36" stroke="#9DC8E8" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>`;
+
+    // Список клиентов: [class, fallback (svg|html), путь к PNG (опционально)]
+    const _clients = [
+      ['lc-qadam',    '<span class="logo-text">QADAM<b>LOFT</b></span>',                 'logos/qadam-loft.png'],
+      ['lc-dami',     _damiSVG,                                                          'logos/dami.png'],
+      ['lc-sapadent', '<span class="logo-text">SAPA DENT</span>',                          'logos/sapa-dent.png'],
+      ['lc-dastur',   _dasturSVG,                                                        'logos/dastur.png'],
+      ['lc-kvadro',   '<span class="logo-text">KVADRO DRIVE</span>',                       'logos/kvadro-drive.png'],
+      ['lc-dynex',    '<span class="logo-text">DYNEX<b>.KZ</b></span>',                    'logos/dynex.png'],
+      ['lc-emporio',  '<span class="logo-text">emporio<b>dent</b></span>',                 'logos/emporio-dent.png'],
+      ['lc-aiala',    '<span class="logo-text">AIALA HOGO</span>',                         'logos/aiala-hogo.png'],
+      ['lc-waqf',     _waqfSVG,                                                          'logos/waqf.png'],
+      ['lc-filtrdom', _filtrdomSVG,                                                      'logos/filtrdom.png'],
+      ['lc-english',  _egSVG,                                                            'logos/eg-group.png'],
+      ['lc-bokentau', _bokenSVG,                                                         'logos/boken-tau.png'],
+      ['lc-tlp',      _tlpSVG,                                                           'logos/tlp.png'],
+      ['lc-thestom',  _thestomSVG,                                                       'logos/thestom.png'],
+    ];
+    function _renderClient(c){
+      const [cls, content, img] = c;
+      const isSvg = content.indexOf('<svg') === 0;
+      const extra = isSvg ? ' svg-logo' : '';
+      // Картинка пытается загрузиться. Если файла нет — остаётся SVG/текст.
+      return `<div class="client-card ${cls}${extra}">
+        <img class="logo-img" src="${img}" alt="${cls}" onload="this.parentNode.classList.add('has-logo')" onerror="this.remove()">
+        ${content}
+      </div>`;
+    }
+    // дублируем для бесшовной анимации
+    document.getElementById('clients-track').innerHTML =
+      _clients.map(_renderClient).join('') + _clients.map(_renderClient).join('');
+  </script>
+
+  <style>
+    /* если картинка логотипа подгрузилась — прячем фолбэк-текст и SVG */
+    .client-card.has-logo .logo-text,
+    .client-card.has-logo .logo-svg{display:none}
+    /* и убираем стилизованный фон, если PNG имеет собственный фон */
+    .client-card.has-logo{background:#fff !important}
+    /* ...кроме брендов, у которых логотип на прозрачном фоне — тогда оставим бренд-цвет */
+    .client-card.has-logo.lc-emporio,
+    .client-card.has-logo.lc-aiala,
+    .client-card.has-logo.lc-dynex{background:revert !important}
+  </style>
+
+  <div class="container" style="margin-top:48px;text-align:center" class="reveal">
+    <p style="color:var(--muted);font-size:15px;max-width:520px;margin:0 auto;line-height:1.6">
+      <span class="ru">И ещё 80+ брендов, которые доверили нам свою наружную рекламу.</span>
+      <span class="kz">Және өз сыртқы жарнамасын бізге сеніп тапсырған 80+ бренд.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ============== CONTACT ============== -->
+<section id="contact" style="padding-top:0">
+  <div class="mesh-bg"></div>
+  <div class="glow glow-yellow drift-2" style="width:520px;height:520px;top:-120px;left:50%;transform:translateX(-50%);opacity:.2"></div>
+  <div class="container">
+    <div class="contact reveal">
+      <div class="contact-info">
+        <div class="section-tag">06 / <span class="ru">Контакты</span><span class="kz">Байланыс</span></div>
+        <h3>
+          <span class="ru">Готовы запустить вашу кампанию?</span>
+          <span class="kz">Науқанды бастауға дайынбыз?</span>
+        </h3>
+        <p>
+          <span class="ru">Оставьте заявку — пришлём медиаплан с прогнозом охвата за 24 часа.</span>
+          <span class="kz">Өтінім қалдырыңыз — 24 сағат ішінде болжаммен медиажоспар жібереміз.</span>
+        </p>
+        <div class="contact-list">
+          <div class="contact-row">
+            <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+            <div>
+              <div class="lbl"><span class="ru">Телефон</span><span class="kz">Телефон</span></div>
+              <div class="val"><a href="tel:+77011327941" style="color:inherit">+7 701 132 79 41</a></div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+            <div>
+              <div class="lbl">E-MAIL</div>
+              <div class="val"><a href="mailto:ortamediaboards@mail.ru" style="color:inherit">ortamediaboards@mail.ru</a></div>
+            </div>
+          </div>
+          <div class="contact-row">
+            <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+            <div>
+              <div class="lbl"><span class="ru">Офис</span><span class="kz">Кеңсе</span></div>
+              <div class="val"><span class="ru">Астана, ул. Кабанбай батыра 36/2</span><span class="kz">Астана қаласы, Қабанбай батыр 36/2</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form class="contact-form" onsubmit="event.preventDefault();this.querySelector('button').innerText='✓ Отправлено'">
+        <input type="text" placeholder="Имя / Аты" required>
+        <input type="text" placeholder="Компания / Компания" required>
+        <input type="tel" placeholder="+7 ___ ___ __ __" required>
+        <input type="email" placeholder="E-mail" required>
+        <textarea placeholder="Расскажите о задаче — города, бюджет, сроки..."></textarea>
+        <button type="submit" class="cta" style="margin-top:8px">
+          <span class="ru">Отправить заявку</span><span class="kz">Өтінім жіберу</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </button>
+        <p style="font-size:12px;color:var(--muted);margin-top:4px"><span class="ru">Нажимая кнопку, вы соглашаетесь с политикой обработки данных.</span><span class="kz">Деректерді өңдеу саясатымен келісесіз.</span></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container">
+    <div class="foot-top">
+      <div class="foot-col">
+        <div class="logo" style="margin-bottom:16px"><b>ORTAMEDIA</b><span class="dotmark"></span><b>BOARDS</b></div>
+        <p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:320px">
+          <span class="ru">Премиальная сеть цифровой наружной рекламы в Казахстане. С 2018 года.</span>
+          <span class="kz">Қазақстандағы премиум сандық сыртқы жарнама желісі. 2018 жылдан.</span>
+        </p>
+      </div>
+      <div class="foot-col">
+        <h5><span class="ru">Услуги</span><span class="kz">Қызметтер</span></h5>
+        <a href="#">DOOH</a><a href="#">Programmatic</a><a href="#">Креатив</a><a href="#">Аналитика</a>
+      </div>
+      <div class="foot-col">
+        <h5><span class="ru">Компания</span><span class="kz">Компания</span></h5>
+        <a href="#"><span class="ru">О нас</span><span class="kz">Біз туралы</span></a>
+        <a href="#"><span class="ru">Карьера</span><span class="kz">Мансап</span></a>
+        <a href="#"><span class="ru">Пресса</span><span class="kz">Баспасөз</span></a>
+        <a href="#"><span class="ru">Кейсы</span><span class="kz">Кейстер</span></a>
+      </div>
+      <div class="foot-col">
+        <h5><span class="ru">Соцсети</span><span class="kz">Әлеуметтік желі</span></h5>
+        <a href="https://www.instagram.com/ortamediaboards.kz/" target="_blank" rel="noopener">Instagram</a><a href="https://wa.me/77011327941" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 ORTAMEDIABOARDS LLP · BIN 180000000000</span>
+      <span><span class="ru">Сделано в Астане</span><span class="kz">Астанада жасалған</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Lang switch — синхронизирует все переключатели языка на странице
+  function setLang(lang, btn){
+    document.body.dataset.lang = lang;
+    document.querySelectorAll('.lang button').forEach(b=>{
+      b.classList.toggle('active', b.textContent.trim().toLowerCase() === lang);
+    });
+  }
+
+  // === Мобильное меню (бургер) ===
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  function closeMobileMenu(){
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  if(burger){
+    burger.addEventListener('click', ()=>{
+      const willOpen = !mobileMenu.classList.contains('open');
+      burger.classList.toggle('open', willOpen);
+      mobileMenu.classList.toggle('open', willOpen);
+      document.body.style.overflow = willOpen ? 'hidden' : '';
+    });
+    // закрывать при клике на любой пункт
+    mobileMenu.querySelectorAll('a').forEach(a=>{
+      a.addEventListener('click', closeMobileMenu);
+    });
+  }
+
+  // === Появление при скролле (все варианты) ===
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger, .split-words, .mask-up')
+    .forEach(el=>io.observe(el));
+
+  // === Прогресс-бар скролла ===
+  const progressBar = document.getElementById('scroll-progress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  // === Кастомный курсор (только для устройств с мышью) ===
+  const isFinePointer = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(isFinePointer){
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = window.innerWidth/2, my = window.innerHeight/2;
+    let rx = mx, ry = my;
+    document.addEventListener('mousemove', (e)=>{
+      mx = e.clientX; my = e.clientY;
+      dot.style.left = mx + 'px';
+      dot.style.top  = my + 'px';
+    });
+    // плавное «догоняющее» кольцо
+    function animateRing(){
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+    // Hover-эффект — большой круг над линками и кнопками
+    document.querySelectorAll('a, button, .faq-question, .city, .client-card, .case, .service, .step, .format-card')
+      .forEach(el=>{
+        el.addEventListener('mouseenter', ()=>ring.classList.add('hover'));
+        el.addEventListener('mouseleave', ()=>ring.classList.remove('hover'));
+      });
+    // Скрывать когда курсор за пределами окна
+    document.addEventListener('mouseleave', ()=>{dot.style.opacity='0';ring.style.opacity='0'});
+    document.addEventListener('mouseenter', ()=>{dot.style.opacity='1';ring.style.opacity='1'});
+  } else {
+    // На тач-устройствах прячем курсоры
+    document.getElementById('cursor-dot').style.display='none';
+    document.getElementById('cursor-ring').style.display='none';
+  }
+
+  // === Mask-reveal заголовков ===
+  // Корректный DOM-walker: бьём ТОЛЬКО текстовые узлы на слова, оставляя inline-теги нетронутыми.
+  function splitTextNodesToWords(root){
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const textNodes = [];
+    let n;
+    while((n = walker.nextNode())) textNodes.push(n);
+    textNodes.forEach(tn => {
+      const txt = tn.nodeValue;
+      if(!txt.trim()) return;
+      const frag = document.createDocumentFragment();
+      txt.split(/(\s+)/).forEach(part => {
+        if(/^\s+$/.test(part)){
+          frag.appendChild(document.createTextNode(part));
+        } else if(part.length){
+          const wrap = document.createElement('span');
+          wrap.className = 'word-wrap';
+          const word = document.createElement('span');
+          word.className = 'word';
+          word.textContent = part;
+          wrap.appendChild(word);
+          frag.appendChild(wrap);
+        }
+      });
+      tn.parentNode.replaceChild(frag, tn);
+    });
+    // расставляем delay'и по порядку слов
+    root.querySelectorAll('.word').forEach((w,i)=>{
+      w.style.transitionDelay = (i*0.06) + 's';
+    });
+  }
+
+  document.querySelectorAll('.section-title, h1.headline').forEach(h=>{
+    if(h.classList.contains('split-words-done')) return;
+    h.classList.add('split-words-done','split-words');
+    splitTextNodesToWords(h);
+    io.observe(h);
+  });
+
+  // === Счётчик чисел при появлении ===
+  function animateCount(el){
+    const target = parseFloat(el.dataset.count);
+    const duration = 1400;
+    const startTime = performance.now();
+    const decimals = (el.dataset.count.split('.')[1]||'').length;
+    function tick(t){
+      const p = Math.min(1, (t - startTime)/duration);
+      const eased = 1 - Math.pow(1-p, 3); // easeOutCubic
+      const current = target * eased;
+      el.textContent = decimals ? current.toFixed(decimals) : Math.round(current).toLocaleString('ru-RU');
+      if(p<1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  const countIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ animateCount(e.target); countIO.unobserve(e.target); }});
+  },{threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
+
+  // === Magnetic-эффект на CTA-кнопках ===
+  document.querySelectorAll('.cta, .cta-ghost').forEach(btn=>{
+    btn.classList.add('magnetic');
+    btn.addEventListener('mousemove', (e)=>{
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width/2;
+      const y = e.clientY - r.top - r.height/2;
+      btn.style.transform = `translate(${x*0.18}px, ${y*0.25}px)`;
+    });
+    btn.addEventListener('mouseleave', ()=>{
+      btn.style.transform = 'translate(0,0)';
+    });
+  });
+
+  // === Параллакс фото в hero (лёгкий сдвиг при скролле) ===
+  const heroPhoto = document.querySelector('.hero-photo-wrap');
+  if(heroPhoto){
+    let ticking = false;
+    window.addEventListener('scroll', ()=>{
+      if(!ticking){
+        requestAnimationFrame(()=>{
+          const y = window.scrollY * 0.06;
+          heroPhoto.style.transform = `translateY(${-y}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  // === FAQ-аккордеон ===
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    const q = item.querySelector('.faq-question');
+    q.addEventListener('click', ()=>{
+      const willOpen = !item.classList.contains('open');
+      // закрываем все остальные
+      document.querySelectorAll('.faq-item.open').forEach(x=>x.classList.remove('open'));
+      if(willOpen) item.classList.add('open');
+    });
+  });
+
+  // City toggle
+  document.querySelectorAll('.city').forEach(c=>{
+    c.addEventListener('click',()=>{
+      document.querySelectorAll('.city').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
