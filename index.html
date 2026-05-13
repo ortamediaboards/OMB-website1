@@ -356,6 +356,8 @@
   .city .count{color:var(--muted);font-family:var(--font-mono);font-size:13px}
   .city.active{color:var(--accent)}
   .city.active .count{color:var(--accent)}
+  .city-addr{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:3px;letter-spacing:0}
+  .city.active .city-addr{color:rgba(255,217,62,.6)}
   #ymap{width:100%;height:460px;border-radius:16px;overflow:hidden;box-shadow:0 0 30px rgba(255,217,62,.12);position:relative}
   #ymap iframe{width:100%;height:calc(100% + 92px);margin-top:-92px;border:none;display:block}
 
@@ -1291,14 +1293,27 @@
 
     <div class="coverage-wrap reveal">
       <div class="city-list">
-        <div class="city active" data-idx="0"><span><span class="ru">Хазрет Султан</span><span class="kz">Хазірет Сұлтан</span></span><span class="count">P4 · 6м²</span></div>
-        <div class="city" data-idx="1"><span><span class="ru">Кабанбай батыра</span><span class="kz">Қабанбай батыр</span></span><span class="count">P6 · 18м²</span></div>
-        <div class="city" data-idx="2"><span><span class="ru">Мангилик Ел</span><span class="kz">Мәңгілік Ел</span></span><span class="count">P4 · 12м²</span></div>
-        <div class="city" data-idx="3"><span><span class="ru">пр. Туран</span><span class="kz">Тұран даң.</span></span><span class="count">P6 · 24м²</span></div>
-        <div class="city" data-idx="4"><span><span class="ru">Сыганак</span><span class="kz">Сығанақ</span></span><span class="count">P4 · 6м²</span></div>
-        <div class="city" data-idx="5"><span><span class="ru">Достык</span><span class="kz">Достық</span></span><span class="count">P6 · 18м²</span></div>
-        <div class="city" data-idx="6"><span><span class="ru">МЕГА Silk Way</span><span class="kz">МЕГА Silk Way</span></span><span class="count">indoor · 4K</span></div>
-        <div class="city" data-idx="7"><span><span class="ru">Хан Шатыр</span><span class="kz">Хан Шатыр</span></span><span class="count">indoor · 4K</span></div>
+        <div class="city active" data-idx="0">
+          <span>
+            <span class="ru">Хазрет Султан</span><span class="kz">Хазірет Сұлтан</span>
+            <small class="city-addr"><span class="ru">пр. Тәуелсіздік, 48</span><span class="kz">Тәуелсіздік д., 48</span></small>
+          </span>
+          <span class="count">2 экрана</span>
+        </div>
+        <div class="city" data-idx="1">
+          <span>
+            <span class="ru">Бас мешит</span><span class="kz">Бас мешіт</span>
+            <small class="city-addr"><span class="ru">пр. Мәңгілік Ел, 65</span><span class="kz">Мәңгілік Ел д., 65</span></small>
+          </span>
+          <span class="count">2 экрана</span>
+        </div>
+        <div class="city" data-idx="2">
+          <span>
+            <span class="ru">Нур Астана</span><span class="kz">Нұр Астана</span>
+            <small class="city-addr"><span class="ru">ул. Кабанбай батыра, 36</span><span class="kz">Қабанбай батыр к., 36</span></small>
+          </span>
+          <span class="count">2 экрана</span>
+        </div>
       </div>
 
       <div id="ymap">
