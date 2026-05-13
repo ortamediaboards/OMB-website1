@@ -10,12 +10,39 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* === Кастомные шрифты бренда === */
-  /* KZ Unbounded — основной фирменный шрифт с поддержкой казахского алфавита */
+  /* NEXT ART KZ — все 5 начертаний, KZ-версии включают казахские буквы */
   @font-face{
-    font-family:'KZ Unbounded';
-    src: url('fonts/KZ_Unbounded-ExtraLight.ttf') format('truetype');
-    font-weight:200; font-style:normal; font-display:swap;
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Light-KZ.otf') format('opentype'),
+         url('fonts/NextArt-Light.otf') format('opentype');
+    font-weight:300; font-style:normal; font-display:swap;
   }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Regular-KZ.otf') format('opentype'),
+         url('fonts/NextArt-Regular.otf') format('opentype');
+    font-weight:400; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-SemiBold-KZ.otf') format('opentype'),
+         url('fonts/NextArt-SemiBold.otf') format('opentype');
+    font-weight:600; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Bold-KZ.otf') format('opentype'),
+         url('fonts/NextArt-Bold.otf') format('opentype');
+    font-weight:700; font-style:normal; font-display:swap;
+  }
+  @font-face{
+    font-family:'NEXT ART';
+    src: url('fonts/NextArt-Heavy-KZ.otf') format('opentype'),
+         url('fonts/NextArt-Heavy.otf') format('opentype');
+    font-weight:900; font-style:normal; font-display:swap;
+  }
+
+  /* KZ Unbounded — запасной для символов которых нет в NEXT ART */
   @font-face{
     font-family:'KZ Unbounded';
     src: url('fonts/KZ_Unbounded-Regular.ttf') format('truetype');
@@ -43,8 +70,8 @@
     --gradient: radial-gradient(60% 60% at 50% 0%, rgba(255,217,62,0.18) 0%, rgba(6,18,42,0) 60%);
 
     /* Шрифты бренда */
-    --font-display: 'KZ Unbounded', 'Manrope', system-ui, sans-serif;
-    --font-body: 'KZ Unbounded', 'Manrope', system-ui, -apple-system, sans-serif;
+    --font-display: 'NEXT ART', 'KZ Unbounded', 'Manrope', system-ui, sans-serif;
+    --font-body: 'NEXT ART', 'KZ Unbounded', 'Manrope', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
   }
 
@@ -114,7 +141,7 @@
     border-bottom:1px solid var(--line);
   }
   .topbar-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
-  .logo{display:inline-flex;align-items:baseline;gap:8px;font-weight:600;letter-spacing:.04em;font-size:17px;font-family:var(--font-display);color:var(--text)}
+  .logo{display:inline-flex;align-items:baseline;gap:8px;font-weight:600;letter-spacing:.04em;font-size:17px;font-family:'NEXT ART','KZ Unbounded',sans-serif;color:var(--text)}
   .logo b{font-weight:600}
   .logo .dotmark{
     width:8px;height:8px;border-radius:50%;
@@ -830,7 +857,7 @@
       <span class="eyebrow"><span class="dot"></span><span class="ru">DOOH сеть #1 в Казахстане</span><span class="kz">Қазақстандағы №1 DOOH желісі</span></span>
       <h1 class="headline">
         <span class="ru"><span class="stroke">Ваш бренд</span><br>на главных <span class="accent">экранах</span><br>страны.</span>
-        <span class="kz"><span class="stroke">Сіздің бренд</span><br>елдің басты <span class="accent">экрандарында</span>.</span>
+        <span class="kz"><span class="stroke">Сіздің брендіңіз</span><br>елордамыздың басты <span class="accent">экрандарында</span>.</span>
       </h1>
       <p class="lead">
         <span class="ru">Цифровая наружная реклама нового поколения: 4K LED-экраны, программатик-закупка, реальная аналитика охвата по геолокации и времени.</span>
