@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Fallback web fonts: Unbounded — самый близкий к NEXT ART геометрический heavy с полной поддержкой казахского -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
   /* === Кастомные шрифты бренда === */
   /* KZ Unbounded — основной фирменный шрифт с поддержкой казахского алфавита */
@@ -357,19 +356,8 @@
   .city .count{color:var(--muted);font-family:var(--font-mono);font-size:13px}
   .city.active{color:var(--accent)}
   .city.active .count{color:var(--accent)}
-  #ymap{width:100%;height:460px;border-radius:16px;overflow:hidden;filter:drop-shadow(0 0 30px rgba(255,217,62,.15))}
-  /* убираем жёлтый тон тайлов, приближаем к нужной палитре */
-  #ymap .leaflet-tile-pane{
-    filter: saturate(0.28) brightness(1.07) contrast(0.9);
-  }
-  .leaflet-marker-icon{filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
-  .leaflet-popup-content-wrapper{background:#fff;border:none;border-radius:12px;color:#1A1A2E;font-family:'KZ Unbounded','Manrope',sans-serif;box-shadow:0 8px 32px rgba(0,0,0,.18)}
-  .leaflet-popup-content{margin:12px 16px;font-size:13px;line-height:1.5}
-  .leaflet-popup-content b{display:block;font-size:14px;font-weight:700;margin-bottom:4px;color:#06122A}
-  .leaflet-popup-tip{background:#fff}
-  .leaflet-popup-close-button{color:#999 !important}
-  .leaflet-control-zoom a{background:#fff !important;border-color:#ddd !important;color:#333 !important}
-  .leaflet-control-zoom a:hover{background:#f5f5f5 !important}
+  #ymap{width:100%;height:460px;border-radius:16px;overflow:hidden;box-shadow:0 0 30px rgba(255,217,62,.12);position:relative}
+  #ymap iframe{width:100%;height:calc(100% + 92px);margin-top:-92px;border:none;display:block}
 
   /* ===== FORMATS ===== */
   .formats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -1313,7 +1301,9 @@
         <div class="city" data-idx="7"><span><span class="ru">Хан Шатыр</span><span class="kz">Хан Шатыр</span></span><span class="count">indoor · 4K</span></div>
       </div>
 
-      <div id="ymap"></div>
+      <div id="ymap">
+        <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1oaJrEbvm-UXHvy8YgGhxnBDhIAGRs-0&ehbc=2E312F" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
     </div>
   </div>
 </section>
@@ -1866,81 +1856,13 @@
     });
   });
 
-  // ── Leaflet map ──────────────────────────────────────────────────────────────
-  (function(){
-    var script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
-    script.onload = initMap;
-    document.head.appendChild(script);
-  })();
-
-  var screens = [
-    { name:'Хазрет Султан',  spec:'P4 · 6м²',      coords:[51.1285, 71.4073] },
-    { name:'Кабанбай батыра',spec:'P6 · 18м²',     coords:[51.1744, 71.4491] },
-    { name:'Мангилик Ел',    spec:'P4 · 12м²',     coords:[51.1298, 71.4017] },
-    { name:'пр. Туран',      spec:'P6 · 24м²',     coords:[51.1451, 71.3807] },
-    { name:'Сыганак',        spec:'P4 · 6м²',      coords:[51.1594, 71.4696] },
-    { name:'Достык',         spec:'P6 · 18м²',     coords:[51.1748, 71.4898] },
-    { name:'МЕГА Silk Way',  spec:'indoor · 4K',   coords:[51.1173, 71.3749] },
-    { name:'Хан Шатыр',     spec:'indoor · 4K',   coords:[51.1329, 71.4053] },
-  ];
-
-  var mapMarkers = [];
-
-  function makePinIcon(active){
-    var color = active ? '#FFD93E' : '#F5A623';
-    var size  = active ? 36 : 30;
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="'+size+'" height="'+size*1.35+'" viewBox="0 0 36 48">'
-      +'<path d="M18 0C8.06 0 0 8.06 0 18c0 12.42 16.2 28.5 17.1 29.4a1.3 1.3 0 0 0 1.8 0C19.8 46.5 36 30.42 36 18 36 8.06 27.94 0 18 0z" fill="'+color+'"/>'
-      +'<circle cx="18" cy="18" r="7" fill="white"/>'
-      +'</svg>';
-    return L.divIcon({
-      className:'',
-      html:svg,
-      iconSize:[size, size*1.35],
-      iconAnchor:[size/2, size*1.35],
-      popupAnchor:[0, -size*1.35+4]
+  // City list — highlight active item
+  document.querySelectorAll('.city').forEach(function(c){
+    c.addEventListener('click',function(){
+      document.querySelectorAll('.city').forEach(function(x){ x.classList.remove('active'); });
+      c.classList.add('active');
     });
-  }
-
-  function initMap(){
-    var map = L.map('ymap',{
-      center:[51.145, 71.435],
-      zoom:13,
-      zoomControl:false,
-      attributionControl:false
-    });
-
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{
-      attribution:'&copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
-      maxZoom:19
-    }).addTo(map);
-
-    L.control.zoom({position:'topright'}).addTo(map);
-    L.control.attribution({position:'bottomleft'}).addTo(map);
-
-    screens.forEach(function(s, i){
-      var m = L.marker(s.coords,{icon:makePinIcon(i===0)})
-        .addTo(map)
-        .bindPopup('<b>'+s.name+'</b>'+s.spec);
-      mapMarkers.push(m);
-    });
-
-    mapMarkers[0].openPopup();
-
-    document.querySelectorAll('.city').forEach(function(c){
-      c.addEventListener('click',function(){
-        document.querySelectorAll('.city').forEach(function(x){ x.classList.remove('active'); });
-        c.classList.add('active');
-        var idx = parseInt(c.dataset.idx,10);
-        mapMarkers.forEach(function(m,i){
-          m.setIcon(makePinIcon(i===idx));
-        });
-        map.setView(screens[idx].coords, 14, {animate:true});
-        mapMarkers[idx].openPopup();
-      });
-    });
-  }
+  });
 </script>
 
 </body>
