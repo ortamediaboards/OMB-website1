@@ -164,7 +164,7 @@
   .hero{position:relative;padding:96px 0 120px;overflow:hidden}
   .hero::before{content:"";position:absolute;inset:0;background:var(--gradient);pointer-events:none}
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.35;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,black,transparent 80%);}
-  .hero-inner{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:64px;align-items:center}
+  .hero-inner{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
   @media (max-width:980px){.hero-inner{grid-template-columns:1fr;gap:48px}}
 
   .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line);background:var(--bg-2);border-radius:999px;font-size:12px;color:var(--muted);font-family:var(--font-mono)}
@@ -201,7 +201,7 @@
   .hero-stat .lbl{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--font-mono)}
 
   /* HERO — обёртка с glow-ореолом */
-  .hero-photo-wrap{position:relative}
+  .hero-photo-wrap{position:relative;margin-top:-60px}
   .hero-photo-wrap::before{
     content:"";position:absolute;inset:-60px;z-index:0;pointer-events:none;border-radius:48px;
     background:
@@ -215,7 +215,7 @@
     position:relative;
     border-radius:24px;
     overflow:hidden;
-    aspect-ratio: 3/4;
+    aspect-ratio: 4/5;
     background:
       linear-gradient(180deg, rgba(6,18,42,0) 50%, rgba(6,18,42,.45) 100%),
       linear-gradient(135deg, #1A2F52 0%, #081428 100%);
@@ -466,6 +466,9 @@
   .foot-col h5{font-size:13px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin-bottom:20px}
   .foot-col a{display:block;font-size:14px;color:var(--text);padding:6px 0;opacity:.85}
   .foot-col a:hover{color:var(--accent);opacity:1}
+  .foot-social{display:flex !important;align-items:center;gap:8px}
+  .foot-social svg{flex-shrink:0;opacity:.7}
+  .foot-social:hover svg{opacity:1}
   .foot-bottom{padding-top:32px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;font-family:var(--font-mono)}
 
   /* ===== ПРОГРЕСС-БАР СКРОЛЛА (как у sencomms-подобных сайтов) ===== */
@@ -1773,7 +1776,14 @@
       </div>
       <div class="foot-col">
         <h5><span class="ru">Соцсети</span><span class="kz">Әлеуметтік желі</span></h5>
-        <a href="https://www.instagram.com/ortamediaboards.kz/" target="_blank" rel="noopener">Instagram</a><a href="https://wa.me/77011327941" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.instagram.com/ortamediaboards.kz?igsh=MTZpcGQwb3ZqaTV6cQ==" target="_blank" rel="noopener" class="foot-social">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a href="https://wa.me/77011327941" target="_blank" rel="noopener" class="foot-social">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          WhatsApp
+        </a>
       </div>
     </div>
     <div class="foot-bottom">
