@@ -1699,18 +1699,52 @@
         </div>
       </div>
 
-      <form class="contact-form" onsubmit="event.preventDefault();this.querySelector('button').innerText='✓ Отправлено'">
-        <input type="text" placeholder="Имя / Аты" required>
-        <input type="text" placeholder="Компания / Компания" required>
-        <input type="tel" placeholder="+7 ___ ___ __ __" required>
-        <input type="email" placeholder="E-mail" required>
-        <textarea placeholder="Расскажите о задаче — города, бюджет, сроки..."></textarea>
-        <button type="submit" class="cta" style="margin-top:8px">
+      <form class="contact-form" id="contact-form">
+        <input type="text"  id="cf-name"    placeholder="Имя / Аты" required>
+        <input type="text"  id="cf-company" placeholder="Компания / Компания" required>
+        <input type="tel"   id="cf-phone"   placeholder="+7 ___ ___ __ __" required>
+        <input type="email" id="cf-email"   placeholder="E-mail" required>
+        <textarea           id="cf-msg"     placeholder="Расскажите о задаче — города, бюджет, сроки..."></textarea>
+        <button type="submit" class="cta" id="cf-btn" style="margin-top:8px">
           <span class="ru">Отправить заявку</span><span class="kz">Өтінім жіберу</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </button>
         <p style="font-size:12px;color:var(--muted);margin-top:4px"><span class="ru">Нажимая кнопку, вы соглашаетесь с политикой обработки данных.</span><span class="kz">Деректерді өңдеу саясатымен келісесіз.</span></p>
       </form>
+      <script>
+        // ← ВСТАВЬ СЮДА свой URL из Apps Script
+        var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUNcrQ9tRB7IdM2v8IkeTLlqW016Aq9uwf1_JAhbOUSOX8QBpv7EdeYxl1ZFN_8BdU/exec';
+
+        document.getElementById('contact-form').addEventListener('submit', function(e){
+          e.preventDefault();
+          var btn = document.getElementById('cf-btn');
+          btn.disabled = true;
+          btn.innerHTML = '<span>Отправляем...</span>';
+
+          var payload = {
+            name:    document.getElementById('cf-name').value,
+            company: document.getElementById('cf-company').value,
+            phone:   document.getElementById('cf-phone').value,
+            email:   document.getElementById('cf-email').value,
+            message: document.getElementById('cf-msg').value
+          };
+
+          fetch(APPS_SCRIPT_URL, {
+            method:'POST',
+            body: JSON.stringify(payload)
+          })
+          .then(function(){
+            btn.innerHTML = '✓ Заявка отправлена!';
+            btn.style.background = '#1a7a3c';
+            document.getElementById('contact-form').reset();
+          })
+          .catch(function(){
+            btn.innerHTML = 'Ошибка — попробуйте ещё раз';
+            btn.style.background = '#7a1a1a';
+            btn.disabled = false;
+          });
+        });
+      </script>
     </div>
   </div>
 </section>
