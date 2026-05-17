@@ -195,13 +195,13 @@
 
   .lead{font-size:18px;color:var(--muted);max-width:560px;line-height:1.6}
   .hero-actions{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
-  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;max-width:560px}
-  .hero-stat .num{font-size:32px;font-weight:800;letter-spacing:.01em;font-family:var(--font-display)}
+  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:56px;max-width:560px;align-items:start}
+  .hero-stat .num{font-size:56px;font-weight:800;letter-spacing:.01em;font-family:var(--font-display);line-height:1;height:60px;display:flex;align-items:center}
   .hero-stat .num span{background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero-stat .lbl{font-size:12px;color:var(--muted);margin-top:4px;font-family:var(--font-mono)}
+  .hero-stat .lbl{font-size:14px;color:var(--muted);margin-top:8px;font-family:var(--font-mono)}
 
   /* HERO — обёртка с glow-ореолом */
-  .hero-photo-wrap{position:relative;margin-top:-60px}
+  .hero-photo-wrap{position:relative}
   .hero-photo-wrap::before{
     content:"";position:absolute;inset:-60px;z-index:0;pointer-events:none;border-radius:48px;
     background:
@@ -698,8 +698,8 @@
     .hero-actions{gap:8px}
     .hero-actions .cta, .hero-actions .cta-ghost{padding:14px 18px;font-size:13px;width:100%;justify-content:center}
     .hero-stats{grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:36px}
-    .hero-stat .num{font-size:24px}
-    .hero-stat .lbl{font-size:10px}
+    .hero-stat .num{font-size:40px}
+    .hero-stat .lbl{font-size:12px}
 
     .stats{padding:32px 22px;gap:20px;border-radius:24px}
     .stat .big{font-size:36px}
@@ -754,6 +754,8 @@
     .formats{grid-template-columns:1fr}
     .hero-stats{grid-template-columns:1fr 1fr;gap:14px}
     .hero-stats .hero-stat:last-child{grid-column:1/-1}
+    .hero-stat .num{font-size:44px}
+    .hero-stat .lbl{font-size:13px}
     .stats{grid-template-columns:1fr 1fr}
     h1.headline{font-size:34px}
     .section-title{font-size:26px}
@@ -857,7 +859,7 @@
   <div class="glow glow-warm drift-1" style="width:380px;height:380px;bottom:-100px;left:30%;opacity:.35"></div>
   <div class="container hero-inner">
     <div>
-      <span class="eyebrow"><span class="dot"></span><span class="ru">DOOH сеть #1 в Казахстане</span><span class="kz">Қазақстандағы №1 DOOH желісі</span></span>
+      <span class="eyebrow"><span class="dot"></span><span class="ru">Сеть LED экранов #1 в Казахстане</span><span class="kz">Қазақстандағы №1 LED экрандар желісі</span></span>
       <h1 class="headline">
         <span class="ru"><span class="stroke">Ваш бренд</span><br>на главных <span class="accent">экранах</span><br>страны.</span>
         <span class="kz"><span class="stroke">Сіздің брендіңіз</span><br>елордамыздың басты <span class="accent">экрандарында</span>.</span>
@@ -876,9 +878,9 @@
         </button>
       </div>
       <div class="hero-stats">
-        <div class="hero-stat"><div class="num"><span data-count="68">0</span><span>+</span></div><div class="lbl"><span class="ru">экранов</span><span class="kz">экран</span></div></div>
-        <div class="hero-stat"><div class="num"><span data-count="40">0</span><span>+</span></div><div class="lbl"><span class="ru">локаций</span><span class="kz">локация</span></div></div>
-        <div class="hero-stat"><div class="num"><span data-count="2.4">0</span><span>М</span></div><div class="lbl"><span class="ru">контактов / день</span><span class="kz">контакт / күн</span></div></div>
+        <div class="hero-stat"><div class="num"><span data-count="6">0</span></div><div class="lbl"><span class="ru">экранов</span><span class="kz">экран</span></div></div>
+        <div class="hero-stat"><div class="num"><span data-count="3">0</span></div><div class="lbl"><span class="ru">локации</span><span class="kz">локация</span></div></div>
+        <div class="hero-stat"><div class="num"><span data-count="200">0</span><span class="ru"> тыс.</span><span class="kz"> мың</span></div><div class="lbl"><span class="ru">контактов / день</span><span class="kz">контакт / күн</span></div></div>
       </div>
     </div>
 
@@ -1137,16 +1139,12 @@
 <!-- ============== TICKER ============== -->
 <div class="ticker">
   <div class="ticker-track">
-    <span>● <strong>LIVE</strong> · ALMATY / Абая—Розыбакиева · 4K · 12s slot</span>
-    <span>● <strong>LIVE</strong> · ASTANA / Кабанбай батыра · 6×3 m · LED P6</span>
-    <span>● <strong>LIVE</strong> · SHYMKENT / Тауке хана · Mall · 32"×16"</span>
-    <span>● <strong>LIVE</strong> · KARAGANDA / Бухар Жырау · 8×4 m</span>
-    <span>● <strong>LIVE</strong> · АТЫРАУ / Сатпаева · DOOH · brightness 7500 nit</span>
-    <span>● <strong>LIVE</strong> · ALMATY / Абая—Розыбакиева · 4K · 12s slot</span>
-    <span>● <strong>LIVE</strong> · ASTANA / Кабанбай батыра · 6×3 m · LED P6</span>
-    <span>● <strong>LIVE</strong> · SHYMKENT / Тауке хана · Mall · 32"×16"</span>
-    <span>● <strong>LIVE</strong> · KARAGANDA / Бухар Жырау · 8×4 m</span>
-    <span>● <strong>LIVE</strong> · АТЫРАУ / Сатпаева · DOOH · brightness 7500 nit</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Хазрет Султан · пр. Тәуелсіздік, 48 · LED P4</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Бас мешит · пр. Мәңгілік Ел, 65 · LED P4</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Нур Астана · ул. Кабанбай батыра, 36 · LED P4</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Хазрет Султан · пр. Тәуелсіздік, 48 · LED P4</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Бас мешит · пр. Мәңгілік Ел, 65 · LED P4</span>
+    <span>● <strong>LIVE</strong> · ASTANA / Нур Астана · ул. Кабанбай батыра, 36 · LED P4</span>
   </div>
 </div>
 
@@ -1159,8 +1157,8 @@
       <div>
         <div class="section-tag">01 / <span class="ru">Услуги</span><span class="kz">Қызметтер</span></div>
         <h2 class="section-title">
-          <span class="ru">Полный цикл размещения <span class="grad">DOOH</span></span>
-          <span class="kz">Толық DOOH орналастыру циклі</span>
+          <span class="ru">Полный цикл размещения <span class="grad">рекламы</span></span>
+          <span class="kz">Толық жарнама орналастыру циклі</span>
         </h2>
       </div>
       <p class="section-desc">
@@ -1185,7 +1183,7 @@
         <div class="service-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg>
         </div>
-        <h3><span class="ru">Programmatic DOOH</span><span class="kz">Programmatic DOOH</span></h3>
+        <h3><span class="ru">Programmatic реклама</span><span class="kz">Programmatic жарнама</span></h3>
         <p><span class="ru">Автоматизированная закупка по триггерам: погода, трафик, время суток, аудитория.</span><span class="kz">Триггерлер бойынша автоматтандырылған сатып алу: ауа райы, трафик, уақыт.</span></p>
       </div>
       <div class="service">
@@ -1232,9 +1230,9 @@
 <section style="padding-top:0">
   <div class="container reveal">
     <div class="stats">
-      <div class="stat"><div class="big"><span data-count="68">0</span><span>+</span></div><div class="lbl"><span class="ru">LED-экранов в Астане</span><span class="kz">Астанадағы LED-экрандар</span></div></div>
-      <div class="stat"><div class="big"><span data-count="40">0</span><span>+</span></div><div class="lbl"><span class="ru">премиум-локаций</span><span class="kz">премиум локация</span></div></div>
-      <div class="stat"><div class="big"><span data-count="2.4">0</span><span>М</span></div><div class="lbl"><span class="ru">контактов в день</span><span class="kz">күніне контакт</span></div></div>
+      <div class="stat"><div class="big"><span data-count="6">0</span></div><div class="lbl"><span class="ru">LED-экранов в Астане</span><span class="kz">Астанадағы LED-экрандар</span></div></div>
+      <div class="stat"><div class="big"><span data-count="3">0</span></div><div class="lbl"><span class="ru">премиум-локации</span><span class="kz">премиум локация</span></div></div>
+      <div class="stat"><div class="big"><span data-count="200">0</span><span class="ru"> тыс.</span><span class="kz"> мың</span></div><div class="lbl"><span class="ru">контактов в день</span><span class="kz">күніне контакт</span></div></div>
       <div class="stat"><div class="big"><span data-count="99.7">0</span><span>%</span></div><div class="lbl"><span class="ru">аптайм трансляций</span><span class="kz">трансляция аптаймы</span></div></div>
     </div>
   </div>
@@ -1326,21 +1324,21 @@
         <div class="city active" data-idx="0">
           <span>
             <span class="ru">Хазрет Султан</span><span class="kz">Хазірет Сұлтан</span>
-            <small class="city-addr"><span class="ru">пр. Тәуелсіздік, 48</span><span class="kz">Тәуелсіздік д., 48</span></small>
+            <small class="city-addr"><span class="ru">пр. Тәуелсіздік, 48</span><span class="kz">Тәуелсіздік д-лы, 48</span></small>
           </span>
           <span class="count">2 экрана</span>
         </div>
         <div class="city" data-idx="1">
           <span>
             <span class="ru">Бас мешит</span><span class="kz">Бас мешіт</span>
-            <small class="city-addr"><span class="ru">пр. Мәңгілік Ел, 65</span><span class="kz">Мәңгілік Ел д., 65</span></small>
+            <small class="city-addr"><span class="ru">пр. Мәңгілік Ел, 65</span><span class="kz">Мәңгілік Ел д-лы, 65</span></small>
           </span>
           <span class="count">2 экрана</span>
         </div>
         <div class="city" data-idx="2">
           <span>
             <span class="ru">Нур Астана</span><span class="kz">Нұр Астана</span>
-            <small class="city-addr"><span class="ru">ул. Кабанбай батыра, 36</span><span class="kz">Қабанбай батыр к., 36</span></small>
+            <small class="city-addr"><span class="ru">ул. Кабанбай батыра, 36</span><span class="kz">Қабанбай батыр к-сі, 36</span></small>
           </span>
           <span class="count">2 экрана</span>
         </div>
@@ -1552,8 +1550,8 @@
           <span class="kz">Науқанға минимум бюджет қандай?</span>
         </div>
         <div class="faq-answer"><div class="faq-answer-inner">
-          <span class="ru">Минимальный бюджет на DOOH-кампанию у нас — от 500 000 ₸ за неделю в одном городе. Это даёт реальный охват и позволяет получить корректные post-buy данные. Под programmatic-закупку — от 300 000 ₸.</span>
-          <span class="kz">DOOH науқанының минимум бюджеті — бір қалада бір аптаға 500 000 ₸-ден. Programmatic үшін — 300 000 ₸-ден.</span>
+          <span class="ru">Минимальный бюджет на рекламную кампанию у нас — от 350 000 ₸.</span>
+          <span class="kz">Рекламалық науқанның минимум бюджеті — 350 000 ₸-ден бастап.</span>
         </div></div>
       </div>
       <div class="faq-item">
@@ -1765,7 +1763,7 @@
       </div>
       <div class="foot-col">
         <h5><span class="ru">Услуги</span><span class="kz">Қызметтер</span></h5>
-        <a href="#">DOOH</a><a href="#">Programmatic</a><a href="#">Креатив</a><a href="#">Аналитика</a>
+        <a href="#">LED реклама</a><a href="#">Programmatic</a><a href="#">Креатив</a><a href="#">Аналитика</a>
       </div>
       <div class="foot-col">
         <h5><span class="ru">Компания</span><span class="kz">Компания</span></h5>
@@ -1787,7 +1785,7 @@
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 ORTAMEDIABOARDS LLP · BIN 180000000000</span>
+      <span>© 2026 ORTAMEDIABOARDS LLP</span>
       <span><span class="ru">Сделано в Астане</span><span class="kz">Астанада жасалған</span></span>
     </div>
   </div>
