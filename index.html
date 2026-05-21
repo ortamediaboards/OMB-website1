@@ -80,6 +80,10 @@
     --font-display: 'KZ Unbounded', 'Manrope', system-ui, sans-serif;
     --font-body: 'KZ Unbounded', 'Manrope', system-ui, -apple-system, sans-serif;
   }
+  [data-lang="kz"] h1.headline{
+    text-transform:uppercase;
+    font-size:clamp(26px, 3.4vw, 48px);
+  }
 
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
@@ -156,6 +160,9 @@
     align-self:center;
   }
   .nav{display:flex;gap:28px;font-size:14px;color:var(--muted)}
+  .nav-phone{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--accent);white-space:nowrap;transition:opacity .2s}
+  .nav-phone:hover{opacity:.8}
+  @media(max-width:900px){.nav-phone{display:none}}
   .nav a:hover{color:var(--text)}
   .lang{display:flex;gap:2px;border:1px solid var(--line);border-radius:999px;padding:4px;background:var(--bg-2)}
   .lang button{background:none;border:0;color:var(--muted);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:12px;font-weight:600;letter-spacing:.05em;font-family:var(--font-mono)}
@@ -167,7 +174,7 @@
   @media (max-width:900px){.nav{display:none}.topbar-inner .lang{display:none}}
 
   /* ===== HERO ===== */
-  .hero{position:relative;padding:96px 0 120px;overflow:hidden}
+  .hero{position:relative;padding:40px 0 120px;overflow:hidden}
   .hero::before{content:"";position:absolute;inset:0;background:var(--gradient);pointer-events:none}
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:80px 80px;opacity:.35;mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,black,transparent 80%);}
   .hero-inner{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
@@ -201,6 +208,8 @@
 
   .lead{font-size:18px;color:var(--muted);max-width:560px;line-height:1.6}
   .hero-actions{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+  .waqf-badge{display:inline-flex;align-items:center;gap:12px;margin-top:24px;padding:12px 20px;border-radius:16px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80;font-size:16px;font-weight:700;letter-spacing:.01em}
+  .waqf-badge img{height:52px;width:auto;object-fit:contain;border-radius:6px}
   .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:56px;max-width:560px;align-items:start}
   .hero-stat .num{font-size:56px;font-weight:800;letter-spacing:.01em;font-family:var(--font-display);line-height:1;height:60px;display:flex;align-items:center}
   .hero-stat .num span{background:var(--brand-grad);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -429,7 +438,7 @@
   .format-card .meta{position:relative;z-index:2;color:var(--muted);font-size:13px;margin-top:8px}
   .format-card::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(7,8,11,.95) 100%);z-index:1}
 
-  .fb1{background:radial-gradient(80% 80% at 30% 30%,#FFD93E,#06122A)}
+  .fb1{background:url('formats/billbord.png') center/cover no-repeat}
   .fb2{background:radial-gradient(80% 80% at 70% 30%,#FFFFFF,#06122A)}
   .fb3{background:radial-gradient(80% 80% at 30% 70%,#FFE986,#06122A)}
   .fb4{background:radial-gradient(80% 80% at 70% 70%,#FFC107,#06122A)}
@@ -619,34 +628,25 @@
 
   /* ===== ОТЗЫВЫ ===== */
   .testimonials{padding:120px 0;position:relative;overflow:hidden}
-  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
-  @media (max-width:900px){.reviews{grid-template-columns:1fr}}
+  .reviews{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:56px}
+  @media (max-width:760px){.reviews{grid-template-columns:1fr}}
   .review{
-    padding:32px;border-radius:24px;border:1px solid var(--line);
-    background:linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
-    position:relative;transition:transform .3s,border-color .3s;
+    padding:28px 28px 24px;border-radius:20px;border:1px solid var(--line);
+    background:var(--bg-2);
+    display:flex;flex-direction:column;gap:16px;
+    transition:transform .3s,border-color .3s;
   }
   .review:hover{transform:translateY(-4px);border-color:rgba(255,217,62,.3)}
-  .review .quote-mark{
-    position:absolute;top:-10px;left:24px;width:48px;height:48px;border-radius:12px;
-    background:var(--brand-grad);
-    display:flex;align-items:center;justify-content:center;color:var(--bg);
-    font-family:Georgia,serif;font-size:48px;font-weight:900;line-height:.6;padding-top:8px;
-  }
-  .review p{
-    color:var(--text);font-size:15px;line-height:1.7;margin:24px 0;
-  }
-  .review .author{display:flex;align-items:center;gap:14px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+  .review .stars{color:var(--accent);font-size:16px;letter-spacing:3px}
+  .review p{color:var(--text);font-size:15px;line-height:1.75;flex:1}
+  .review .author{display:flex;align-items:center;gap:14px;padding-top:16px;border-top:1px solid var(--line)}
   .review .avatar{
-    width:48px;height:48px;border-radius:50%;
-    background:linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%);
-    display:flex;align-items:center;justify-content:center;
-    color:var(--accent);font-weight:800;font-family:var(--font-display);font-size:18px;
-    border:1px solid var(--line);
+    width:52px;height:52px;border-radius:50%;overflow:hidden;flex-shrink:0;
+    background:var(--bg-3);border:2px solid var(--line);
   }
-  .review .info .name{font-weight:700;font-size:14px}
-  .review .info .role{color:var(--muted);font-size:12px;font-family:var(--font-mono);margin-top:2px}
-  .review .stars{color:var(--accent);font-size:14px;letter-spacing:2px}
+  .review .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+  .review .info .name{font-weight:700;font-size:15px}
+  .review .info .role{color:var(--muted);font-size:12px;font-family:var(--font-mono);margin-top:3px}
 
   /* ===== FAQ-АККОРДЕОН ===== */
   .faq-list{display:flex;flex-direction:column;gap:12px;margin-top:48px;max-width:880px;margin-left:auto;margin-right:auto}
@@ -843,6 +843,10 @@
       <a href="#contact"><span class="ru">Контакты</span><span class="kz">Байланыс</span></a>
     </nav>
     <div style="display:flex;gap:12px;align-items:center">
+      <a href="tel:+77011327941" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +7 701 132 79 41
+      </a>
       <div class="lang">
         <button class="active" onclick="setLang('ru',this)">RU</button>
         <button onclick="setLang('kz',this)">KZ</button>
@@ -902,6 +906,11 @@
         <button class="cta-ghost" onclick="document.getElementById('coverage').scrollIntoView({behavior:'smooth'})">
           <span class="ru">Посмотреть карту</span><span class="kz">Картаны көру</span>
         </button>
+      </div>
+      <div class="waqf-badge">
+        <img src="waqf/IMG_4950 (1).PNG" alt="Уақып қоры">
+        <span class="ru">50% дохода отправляем в фонд Уакып</span>
+        <span class="kz">Табыстың 50% Уақып қорына аударылады</span>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><div class="num"><span data-count="6">0</span></div><div class="lbl"><span class="ru">экранов</span><span class="kz">экран</span></div></div>
@@ -1570,53 +1579,67 @@
       </div>
     </div>
     <div class="reviews reveal stagger">
+
       <div class="review">
-        <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Отличный результат показала команда Ortamedia Boards, спасибо за высокий уровень обслуживания и результативности. Лучшая компания по LED-экранам во всём Казахстане.</span>
-          <span class="kz">Ortamedia Boards командасы тамаша нәтиже көрсетті, жоғары қызмет деңгейі мен тиімділігі үшін рахмет. Қазақстандағы ең үздік LED-экран компаниясы.</span>
+          <span class="ru">«Ortamedia Boards полностью изменили облик наших торговых точек. Визуал стал ярким и профессиональным — продажи пошли вверх. Команда работает чётко, в срок и без лишних слов. Рекомендую всем, кто ценит качество.»</span>
+          <span class="kz">«Ortamedia Boards сауда нүктелерімізді толығымен өзгертті. Визуал жарқын және кәсіби болды — сатылым өсті. Команда нақты, уақытында жұмыс істейді. Сапаны бағалайтындарға ұсынамын.»</span>
         </p>
         <div class="author">
-          <div class="avatar">NZ</div>
+          <div class="avatar"><img src="face_photos/IMG_0041.PNG" alt="Данияр Муратқасымов"></div>
           <div class="info">
-            <div class="name">Найля Захарьяева</div>
-            <div class="role">Клиент · 2GIS отзыв</div>
+            <div class="name">Данияр Муратқасымов</div>
+            <div class="role">CEO · Dastur Wear</div>
           </div>
         </div>
       </div>
 
       <div class="review">
-        <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Спасибо за помощь! Всё прошло быстро и профессионально.</span>
-          <span class="kz">Көмектеріңе рахмет! Бәрі тез және кәсіби деңгейде өтті.</span>
+          <span class="ru">«Для нашего отеля важна каждая деталь, создающая атмосферу. Ortamedia Boards справились безупречно — имиджевые экраны смотрятся дорого и гармонично. Гости замечают и хвалят оформление.»</span>
+          <span class="kz">«Қонақүйіміз үшін атмосфера жасайтын әрбір деталь маңызды. Ortamedia Boards мінсіз орындады — имиджтік экрандар қымбат және үйлесімді көрінеді. Қонақтар байқап, мақтайды.»</span>
         </p>
         <div class="author">
-          <div class="avatar">DS</div>
+          <div class="avatar"><img src="face_photos/IMG_0042.PNG" alt="Дастан Килибасов"></div>
           <div class="info">
-            <div class="name">Дүйсебай Самет</div>
-            <div class="role">Клиент · 2GIS отзыв</div>
+            <div class="name">Дастан Килибасов</div>
+            <div class="role">CEO · Asyr Hotel</div>
           </div>
         </div>
       </div>
 
       <div class="review">
-        <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Профессиональная команда. Быстро согласовали, запустили в срок. Экраны у мечетей дают хороший охват — именно та аудитория, которая нам нужна.</span>
-          <span class="kz">Кәсіби команда. Тез келісіп, уақытында іске қостық. Мешіттердегі экрандар жақсы қамту береді — бізге дәл керек аудитория.</span>
+          <span class="ru">«Обратились за оформлением офиса и производственных объектов. Результат превзошёл ожидания — всё выполнено аккуратно, материалы качественные, сроки соблюдены. Сотрудничество выстроено профессионально на каждом этапе.»</span>
+          <span class="kz">«Кеңсе мен өндіріс объектілерін безендіру үшін хабарластық. Нәтиже күткеннен асты — бәрі ұқыпты, материалдар сапалы, мерзімдер сақталды. Ынтымақтастық кәсіби деңгейде жүргізілді.»</span>
         </p>
         <div class="author">
-          <div class="avatar">OMB</div>
+          <div class="avatar"><img src="face_photos/IMG_0043.PNG" alt="Данияр Сагитов"></div>
           <div class="info">
-            <div class="name"><span class="ru">Клиент OMB</span><span class="kz">OMB клиенті</span></div>
-            <div class="role">2GIS · ★★★★★</div>
+            <div class="name">Данияр Сагитов</div>
+            <div class="role"><span class="ru">Генеральный директор · Filtrdom</span><span class="kz">Бас директор · Filtrdom</span></div>
           </div>
         </div>
       </div>
+
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <p>
+          <span class="ru">«Как маркетолог, я понимаю, насколько экраны влияют на восприятие бренда. Ortamedia Boards дали именно то, что нужно: чёткий визуал, правильные акценты и быстрое исполнение. Теперь советую их всем партнёрам.»</span>
+          <span class="kz">«Маркетолог ретінде экрандардың бренд қабылдауына қаншалықты әсер ететінін білемін. Ortamedia Boards дәл керегін берді: нақты визуал, дұрыс акценттер, жылдам орындау. Енді барлық серіктестерге ұсынамын.»</span>
+        </p>
+        <div class="author">
+          <div class="avatar"><img src="face_photos/IMG_0044.PNG" alt="Маркетолог EG Group"></div>
+          <div class="info">
+            <div class="name"><span class="ru">Маркетолог</span><span class="kz">Маркетолог</span></div>
+            <div class="role">EG Group</div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div style="text-align:center;margin-top:40px" class="reveal">
