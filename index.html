@@ -75,6 +75,12 @@
     --font-mono: 'JetBrains Mono', monospace;
   }
 
+  /* Казахская версия — KZ Unbounded (поддерживает все казахские буквы) */
+  [data-lang="kz"] {
+    --font-display: 'KZ Unbounded', 'Manrope', system-ui, sans-serif;
+    --font-body: 'KZ Unbounded', 'Manrope', system-ui, -apple-system, sans-serif;
+  }
+
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
   body{overflow-x:hidden}
@@ -835,7 +841,6 @@
       <a href="#services"><span class="ru">Услуги</span><span class="kz">Қызметтер</span></a>
       <a href="#constructions"><span class="ru">Конструкции</span><span class="kz">Құрылымдар</span></a>
       <a href="#coverage"><span class="ru">География</span><span class="kz">География</span></a>
-      <a href="#cases"><span class="ru">Кейсы</span><span class="kz">Кейстер</span></a>
       <a href="#clients-anchor"><span class="ru">Клиенты</span><span class="kz">Клиенттер</span></a>
       <a href="#contact"><span class="ru">Контакты</span><span class="kz">Байланыс</span></a>
     </nav>
@@ -1551,41 +1556,6 @@
   </div>
 </section>
 
-<!-- ============== CASES ============== -->
-<section id="cases" style="padding-top:0">
-  <div class="mesh-bg cool"></div>
-  <div class="glow glow-yellow drift-1" style="width:420px;height:420px;bottom:-100px;right:-150px;opacity:.25"></div>
-  <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <div class="section-tag">05 / <span class="ru">Кейсы</span><span class="kz">Кейстер</span></div>
-        <h2 class="section-title">
-          <span class="ru">Бренды, которые нам доверяют</span>
-          <span class="kz">Бізге сенетін брендтер</span>
-        </h2>
-      </div>
-    </div>
-    <div class="cases reveal">
-      <div class="case c1">
-        <div class="brand">Kaspi.kz · 2025</div>
-        <h4><span class="ru">Запуск Kaspi Pay в 6 регионах</span><span class="kz">6 өңірде Kaspi Pay-ды іске қосу</span></h4>
-        <div class="res">
-          <div><div class="v">+38%</div><div class="l"><span class="ru">узнаваемость</span><span class="kz">танымалдылық</span></div></div>
-          <div><div class="v">12М</div><div class="l">OTS</div></div>
-          <div><div class="v">14</div><div class="l"><span class="ru">дней</span><span class="kz">күн</span></div></div>
-        </div>
-      </div>
-      <div class="case c2">
-        <div class="brand">Halyk Bank · 2025</div>
-        <h4><span class="ru">Programmatic-кампания «Ипотека 7%»</span><span class="kz">Programmatic «Ипотека 7%»</span></h4>
-        <div class="res">
-          <div><div class="v">×3.4</div><div class="l">CTR uplift</div></div>
-          <div><div class="v">−27%</div><div class="l">CPM</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============== ОТЗЫВЫ ============== -->
 <section class="testimonials" style="padding-top:0">
@@ -1606,14 +1576,14 @@
         <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Запустили кампанию за 3 дня по всей Астане. Узнаваемость бренда выросла на 42% по нашим внутренним замерам, поток в кофейни — на треть. Команда на связи 24/7.</span>
-          <span class="kz">3 күнде Астана бойынша науқан іске қосылды. Бренд танымалдығы 42%-ға өсті, кофеханаларға келушілер саны үштен бірге артты.</span>
+          <span class="ru">Отличный результат показала команда Ortamedia Boards, спасибо за высокий уровень обслуживания и результативности. Лучшая компания по LED-экранам во всём Казахстане.</span>
+          <span class="kz">Ortamedia Boards командасы тамаша нәтиже көрсетті, жоғары қызмет деңгейі мен тиімділігі үшін рахмет. Қазақстандағы ең үздік LED-экран компаниясы.</span>
         </p>
         <div class="author">
-          <div class="avatar">TLP</div>
+          <div class="avatar">NZ</div>
           <div class="info">
-            <div class="name"><span class="ru">Айгерим Сериковна</span><span class="kz">Айгерім Серікқызы</span></div>
-            <div class="role">CMO · TLP Flowers &amp; Coffee</div>
+            <div class="name">Найля Захарьяева</div>
+            <div class="role">Клиент · 2GIS отзыв</div>
           </div>
         </div>
       </div>
@@ -1622,14 +1592,14 @@
         <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Programmatic-закупка с триггерами по погоде сработала идеально для нашей акции. CPM упал на 27%, при этом охват выше прогноза. Будем работать дальше.</span>
-          <span class="kz">Programmatic сатып алу науқанға тамаша келді. CPM 27%-ға төмендеді, қамту жоспардан жоғары болды.</span>
+          <span class="ru">Спасибо за помощь! Всё прошло быстро и профессионально.</span>
+          <span class="kz">Көмектеріңе рахмет! Бәрі тез және кәсіби деңгейде өтті.</span>
         </p>
         <div class="author">
-          <div class="avatar">DM</div>
+          <div class="avatar">DS</div>
           <div class="info">
-            <div class="name"><span class="ru">Дамир Молдабаев</span><span class="kz">Дамир Молдабаев</span></div>
-            <div class="role">Brand Lead · DAMI</div>
+            <div class="name">Дүйсебай Самет</div>
+            <div class="role">Клиент · 2GIS отзыв</div>
           </div>
         </div>
       </div>
@@ -1638,17 +1608,24 @@
         <div class="quote-mark">"</div>
         <div class="stars">★★★★★</div>
         <p>
-          <span class="ru">Размещали наружную рекламу клиники на главных перекрёстках. За 2 месяца рост заявок на консультации вырос вдвое. Команда подсказала идеальные локации.</span>
-          <span class="kz">Клиниканы негізгі қиылыстарда орналастырдық. 2 ай ішінде кеңеске жазылу екі есе өсті.</span>
+          <span class="ru">Профессиональная команда. Быстро согласовали, запустили в срок. Экраны у мечетей дают хороший охват — именно та аудитория, которая нам нужна.</span>
+          <span class="kz">Кәсіби команда. Тез келісіп, уақытында іске қостық. Мешіттердегі экрандар жақсы қамту береді — бізге дәл керек аудитория.</span>
         </p>
         <div class="author">
-          <div class="avatar">SD</div>
+          <div class="avatar">OMB</div>
           <div class="info">
-            <div class="name"><span class="ru">Алия Тулегенова</span><span class="kz">Әлия Төлегенова</span></div>
-            <div class="role">Director · Sapa Dent</div>
+            <div class="name"><span class="ru">Клиент OMB</span><span class="kz">OMB клиенті</span></div>
+            <div class="role">2GIS · ★★★★★</div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px" class="reveal">
+      <a href="https://2gis.kz/astana/search/ortamedia%20boards/firm/70000001114208183/71.416444%2C51.126251/tab/reviews" target="_blank" rel="noopener" class="cta-ghost" style="display:inline-flex;align-items:center;gap:10px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span class="ru">Все отзывы на 2GIS</span><span class="kz">2GIS-тегі барлық пікірлер</span>
+      </a>
     </div>
   </div>
 </section>
