@@ -581,17 +581,15 @@
   @keyframes cr-right{0%{transform:translateX(-50%)}100%{transform:translateX(0)}}
   .cr-marquee:hover .cr-track{animation-play-state:paused}
   .cr-logo{
-    flex:0 0 auto;min-width:180px;height:110px;
-    display:flex;align-items:center;justify-content:center;padding:0 28px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.07);
+    flex:0 0 auto;width:180px;height:130px;
+    overflow:hidden;
     border-radius:16px;
-    filter:grayscale(1);opacity:.55;
-    transition:opacity .35s, filter .35s, background .35s, border-color .35s;
+    border:1px solid rgba(255,255,255,0.08);
     cursor:default;
+    transition:transform .3s, border-color .3s;
   }
-  .cr-logo img{height:68px;width:auto;max-width:200px;object-fit:contain;display:block;pointer-events:none}
-  .cr-logo:hover{opacity:1;filter:none;background:rgba(255,255,255,0.1);border-color:rgba(255,217,62,0.25)}
+  .cr-logo:hover{transform:scale(1.05);border-color:rgba(255,217,62,0.3)}
+  .cr-logo img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
   /* Разделитель между строками */
   .cr-divider{width:100%;height:1px;background:var(--line);opacity:.4;margin:4px 0}
 
